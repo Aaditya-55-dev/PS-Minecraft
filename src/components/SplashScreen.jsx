@@ -7,14 +7,15 @@ export default function HackfusionSplash({
   text = "HACKFUSION 4",
   duration = 2000,
   progress: controlled,
+  onEnd,
   onComplete,
-  onEnd,  
 }) {
   const [auto, setAuto] = useState(0);
+  const [visible, setVisible] = useState(false); // fade in
+  const [leaving, setLeaving] = useState(false); // fade out
   const isControlled = typeof controlled === "number";
   const value = Math.min(100, Math.max(0, isControlled ? controlled : auto));
 
-  // Load Press Start 2P once.
   useEffect(() => {
     if (document.querySelector(`link[href="${FONT_HREF}"]`)) return;
     const link = document.createElement("link");
@@ -23,7 +24,13 @@ export default function HackfusionSplash({
     document.head.appendChild(link);
   }, []);
 
-  // Self-running progress (eased, so it feels like real loading).
+  // fade in
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // progress
   useEffect(() => {
     if (isControlled) return;
     let raf;
@@ -38,8 +45,17 @@ export default function HackfusionSplash({
     return () => cancelAnimationFrame(raf);
   }, [duration, isControlled]);
 
+  // fade out, then tell the parent
   useEffect(() => {
-    if (value >= 100 && onEnd) onEnd();
+    if (value < 100) return;
+    const pause = setTimeout(() => setLeaving(true), 600); // brief hold on a full bar
+    const done = setTimeout(() => {
+      (onEnd || onComplete)?.();
+    }, 300 + 700); // hold + fade duration
+    return () => {
+      clearTimeout(pause);
+      clearTimeout(done);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value >= 100]);
 
@@ -50,7 +66,10 @@ export default function HackfusionSplash({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value)}
-      style={styles.screen}
+      style={{
+        ...styles.screen,
+        opacity: visible && !leaving ? 1 : 0,
+      }}
     >
       <div style={styles.center}>
         <h1 style={styles.title}>{text}</h1>
@@ -66,12 +85,14 @@ const styles = {
   screen: {
     position: "fixed",
     inset: 0,
+    zIndex: 9999,
     background: "#EF323D",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontFamily: "'Press Start 2P', monospace",
     color: "#fff",
+    transition: "opacity 400ms ease-in-out",
   },
   center: {
     display: "flex",
@@ -97,8 +118,5 @@ const styles = {
     padding: 3,
     boxSizing: "border-box",
   },
-  barFill: {
-    height: "100%",
-    background: "#fff",
-  },
+  barFill: { height: "100%", background: "#fff" },
 };

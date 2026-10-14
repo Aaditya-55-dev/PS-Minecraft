@@ -80,15 +80,15 @@ export default function HeroSection() {
 
             {/* background */}
             <img
-  ref={imgRef}
-  src={HeroImg}
-  alt=""
-  onLoad={() => setHeroLoaded(true)}
-  onError={() => setHeroLoaded(true)}
-  className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ease-in-out ${
-    heroLoaded ? "opacity-100" : "opacity-0"
-  }`}
-/>
+                ref={imgRef}
+                src={HeroImg}
+                alt=""
+                onLoad={() => setHeroLoaded(true)}
+                onError={() => setHeroLoaded(true)}
+                className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ease-in-out ${
+                    heroLoaded ? "opacity-100" : "opacity-0"
+                }`}
+            />
             <div className="absolute inset-0 z-0" />
 
             {/* content */}
@@ -96,7 +96,7 @@ export default function HeroSection() {
                 <motion.img
                     src={Logo}
                     alt="HackFusion"
-                    className="h-60 sm:h-56 md:h-70 drop-shadow-[0_10px_0_rgba(0,0,0,0.35)] -mt-15"
+                    className="h-50 sm:h-56 md:h-70 drop-shadow-[0_10px_0_rgba(0,0,0,0.35)] -mt-40 md:-mt-15"
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                     transition={{
@@ -107,7 +107,7 @@ export default function HeroSection() {
                 />
 
                 <motion.p
-                    className="text-center text-[11px] text-black sm:text-sm md:text-base -mt-25 mb-5"
+                    className="text-center text-[11px] text-black sm:text-sm md:text-base -mt-17 md:-mt-25 mb-5"
                     style={{ fontFamily: "'Press Start 2P', monospace", textShadow: "3px 3px 0 rgb(255,255,255)" }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
