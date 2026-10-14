@@ -1,36 +1,61 @@
-import { useState } from 'react'
-import './App.css'
-import { motion } from 'motion/react'
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import Navbar from "./components/Navbar";
+import Home from "../src/pages/Home";
+import CherryBlossom from "../src/components/Cherryblossom";
+import SplashScreen from "../src/components/SplashScreen"
+// import Schedule from "./pages/Schedule";
+// import RegistrationForm from "./pages/RegistrationForm";
+// import { BackgroundGradientAnimation } from "./components/ui/background-gradient-animation";
+// import Sponsor from "./pages/Sponsor";
+// import Contact from "./pages/Contact";
+// import SplashScreen from "./components/SplashScreen";
+// import FirebaseStats from "./pages/FirebaseStats";
+// // import MaleParticipantsOutsideCampus from "./pages/Male";
+// import CountDown from "./pages/CountDown";
+// import Register from "./pages/Register";
+// import Dashboard from "./pages/Dashboard";
+// import Login from "./pages/Login";
+// import Receipt from './pages/Receipt';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [splashScreen, setSplashScreen] = useState(true);
+  const handleSplashEnd = () => {
+    setSplashScreen(false);
+  };
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 text-white">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
-        className="flex flex-col items-center gap-6 rounded-3xl border border-slate-700 bg-slate-800/70 p-10 shadow-2xl"
-      >
-        <div className="text-sm uppercase tracking-[0.25em] text-sky-300">HackFusion 4.0</div>
-        <motion.div
-          className="flex h-28 w-28 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-4xl font-bold shadow-lg"
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.96 }}
-        >
-          {count}
-        </motion.div>
-        <button
-          type="button"
-          onClick={() => setCount((value) => value + 1)}
-          className="rounded-full bg-blue-500 px-5 py-2.5 font-medium text-white transition hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
-        >
-          Increment
-        </button>
-      </motion.div>
-    </div>
-  )
+    <Router>
+       {splashScreen ?
+        <SplashScreen onEnd={handleSplashEnd} />
+        : 
+        <>
+        {/* <BackgroundGradientAnimation> */}
+          {/* <Navbar /> */}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <CherryBlossom>
+                  <Home />
+                </CherryBlossom>
+              }
+            />
+            {/* <Route path="/registration" element={<RegistrationForm/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/register" element={<Register/>} />
+            <Route path="/sponsors" element={<Sponsor/>} />
+            <Route path="/schedule" element={<Schedule/>} />
+            <Route path="/contact" element={<Contact/>} />
+            <Route path="/admin" element={<FirebaseStats/>} />
+            <Route path="/receipt" element={<Receipt />} />
+            <Route path="/CountDown" element={<CountDown/>}/> */}
+          </Routes>
+        {/* </BackgroundGradientAnimation> */}
+        </>
+      }
+    </Router>
+  );
 }
 
-export default App
+export default App;
