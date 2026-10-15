@@ -18,6 +18,8 @@ import SplashScreen from "../src/components/SplashScreen"
 // import Login from "./pages/Login";
 // import Receipt from './pages/Receipt';
 
+import SmoothScroll from "./components/SmoothScroll";
+
 function App() {
   const [splashScreen, setSplashScreen] = useState(true);
   const handleSplashEnd = () => {
@@ -29,29 +31,29 @@ function App() {
         <SplashScreen onEnd={handleSplashEnd} />
         : 
         <>
-        {/* <BackgroundGradientAnimation> */}
-          {/* <Navbar /> */}
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <CherryBlossom>
-                  <Home />
-                </CherryBlossom>
-              }
-            />
-            {/* <Route path="/registration" element={<RegistrationForm/>} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/dashboard" element={<Dashboard/>} />
-            <Route path="/register" element={<Register/>} />
-            <Route path="/sponsors" element={<Sponsor/>} />
-            <Route path="/schedule" element={<Schedule/>} />
-            <Route path="/contact" element={<Contact/>} />
-            <Route path="/admin" element={<FirebaseStats/>} />
-            <Route path="/receipt" element={<Receipt />} />
-            <Route path="/CountDown" element={<CountDown/>}/> */}
-          </Routes>
-        {/* </BackgroundGradientAnimation> */}
+          <SmoothScroll>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <CherryBlossom>
+                    <Home />
+                  </CherryBlossom>
+                }
+              />
+              {/* <Route path="/registration" element={<RegistrationForm/>} />
+              <Route path="/login" element={<Login/>} />
+              <Route path="/dashboard" element={<Dashboard/>} />
+              <Route path="/register" element={<Register/>} />
+              <Route path="/sponsors" element={<Sponsor/>} />
+              <Route path="/schedule" element={<Schedule/>} />
+              <Route path="/contact" element={<Contact/>} />
+              <Route path="/admin" element={<FirebaseStats/>} />
+              <Route path="/receipt" element={<Receipt />} />
+              <Route path="/CountDown" element={<CountDown/>}/> */}
+            </Routes>
+
+          </SmoothScroll>
         </>
       }
     </Router>
