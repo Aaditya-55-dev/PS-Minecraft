@@ -66,7 +66,7 @@ export default function HeroSection() {
                     />
 
                     <motion.p
-                        className="text-center text-[11px] text-black sm:text-sm md:text-base -mt-17 md:-mt-25 mb-5 font-['Press_Start_2P',monospace] [text-shadow:3px_3px_0_rgb(255,255,255)]"
+                        className="text-center text-[11px] text-yellow-300 sm:text-sm md:text-base -mt-17 md:-mt-25 mb-5 font-['Press_Start_2P',monospace] [text-shadow:3px_3px_0_rgb(0,0,0)]"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.5, duration: 0.8 }}
@@ -77,7 +77,7 @@ export default function HeroSection() {
                     <div className="flex flex-col items-center gap-4 sm:flex-col sm:gap-5">
                         <McButton
                             to={REGISTER_PATH}
-                            color={REGISTRATION_OPEN ? "#4f9a2f" : "#7d7d7d"}
+                            color={REGISTRATION_OPEN ? "#4f9a2f" : "#7d7Id7d"}
                             disabled={!REGISTRATION_OPEN}
                             delay={0.4}
                         >
