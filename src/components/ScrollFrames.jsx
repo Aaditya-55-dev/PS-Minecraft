@@ -11,14 +11,13 @@ const frameUrls = Object.keys(modules)
     .map((key) => modules[key]);
 const FRAME_COUNT = frameUrls.length;
 
-const EASE = 0.12;    // smoothing, lower = floatier
-const MAX_STEP = 1.2; // speed cap: max frames advanced per tick
 const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
 
 export default function ScrollFrames({
     children,
     poster,
     scrollHeight = "400vh",
+    holdScreens = 0,
 }) {
     const sectionRef = useRef(null);
     const canvasRef = useRef(null);
@@ -90,23 +89,19 @@ export default function ScrollFrames({
         return () => window.removeEventListener("resize", resize);
     }, []);
 
-    // scroll -> frame (eased + speed capped)
+    // Keep the displayed frame in sync with the current scroll position.
     useEffect(() => {
         let raf;
-        let current = 0; // smoothed (fractional) frame position
 
         const tick = () => {
             const section = sectionRef.current;
             if (section && FRAME_COUNT) {
                 const { top, height } = section.getBoundingClientRect();
-                const scrollable = height - window.innerHeight;
+                const holdHeight = holdScreens * window.innerHeight;
+                const scrollable = Math.max(height - window.innerHeight - holdHeight, 1);
                 const progress = clamp(-top / scrollable, 0, 1);
                 const target = progress * (FRAME_COUNT - 1);
-
-                const delta = clamp((target - current) * EASE, -MAX_STEP, MAX_STEP);
-                current = Math.abs(target - current) < 0.01 ? target : current + delta;
-
-                const index = Math.round(current);
+                const index = Math.round(target);
                 targetFrame.current = index;
                 if (index !== drawnFrame.current) drawFrame(index);
             }
@@ -115,10 +110,18 @@ export default function ScrollFrames({
 
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, []);
+    }, [holdScreens]);
 
     return (
-        <div ref={sectionRef} className="relative w-full" style={{ height: scrollHeight }}>
+        <div
+            ref={sectionRef}
+            className="relative w-full"
+            style={{
+                height: holdScreens
+                    ? `calc(${scrollHeight} + ${holdScreens * 100}vh)`
+                    : scrollHeight,
+            }}
+        >
             <div className="sticky top-0 h-screen w-full">
                 {/* background */}
                 <div className="absolute inset-0 z-0 overflow-hidden">

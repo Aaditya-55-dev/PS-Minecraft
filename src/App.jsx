@@ -2,7 +2,6 @@ import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Navbar from "./components/Navbar";
 import Home from "../src/pages/Home";
-import CherryBlossom from "../src/components/Cherryblossom";
 import SplashScreen from "../src/components/SplashScreen"
 // import Schedule from "./pages/Schedule";
 // import RegistrationForm from "./pages/RegistrationForm";
@@ -36,9 +35,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <CherryBlossom>
-                    <Home />
-                  </CherryBlossom>
+                  <Home />
                 }
               />
               {/* <Route path="/registration" element={<RegistrationForm/>} />
