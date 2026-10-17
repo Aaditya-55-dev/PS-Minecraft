@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 // ADD THE 120/192 FRAMES IN THE ASSETS/HEROFRAMES FOLDER
 
-const modules = import.meta.glob("../assets/HeroFrames/frame_*.jpg", {
+const modules = import.meta.glob("../assets/HeroFrames/frames3/frame_*.webp", {
     eager: true,
     import: "default",
 });
