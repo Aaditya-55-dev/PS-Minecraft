@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Navbar from "./components/Navbar";
 import Home from "../src/pages/Home";
+import Contact from "./pages/Contact"; // ADDED
 import CherryBlossom from "../src/components/Cherryblossom";
 import SplashScreen from "../src/components/SplashScreen"
 // import Schedule from "./pages/Schedule";
@@ -19,6 +20,9 @@ import SplashScreen from "../src/components/SplashScreen"
 // import Receipt from './pages/Receipt';
 
 import SmoothScroll from "./components/SmoothScroll";
+
+
+
 
 function App() {
   const [splashScreen, setSplashScreen] = useState(true);
@@ -41,13 +45,13 @@ function App() {
                   </CherryBlossom>
                 }
               />
+              <Route path="/contact" element={<Contact />} /> {/* ADDED */}
               {/* <Route path="/registration" element={<RegistrationForm/>} />
               <Route path="/login" element={<Login/>} />
               <Route path="/dashboard" element={<Dashboard/>} />
               <Route path="/register" element={<Register/>} />
               <Route path="/sponsors" element={<Sponsor/>} />
               <Route path="/schedule" element={<Schedule/>} />
-              <Route path="/contact" element={<Contact/>} />
               <Route path="/admin" element={<FirebaseStats/>} />
               <Route path="/receipt" element={<Receipt />} />
               <Route path="/CountDown" element={<CountDown/>}/> */}
