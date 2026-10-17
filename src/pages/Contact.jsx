@@ -26,6 +26,8 @@ import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.png";
 import lanternHanging from "../assets/pageassets-clean/lantern-hanging.png";
 import craftingTable from "../assets/pageassets-clean/crafting-table-icon.png";
 
+import Navbar from "../components/Navbar";
+
 const teamMembers = [
   {
     id: 1,
@@ -314,6 +316,7 @@ function Contact() {
   return (
     <>
       {animationStyles}
+      <Navbar/>
     <div
       className={cx(
         "relative isolate flex min-h-[100dvh] w-full flex-col overflow-x-clip",
