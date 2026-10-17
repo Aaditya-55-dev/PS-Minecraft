@@ -1,30 +1,29 @@
-import { useEffect, useState } from "react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------
    ASSETS  (this file lives in src/pages, so every path starts with ../assets)
    src/assets/characters-clean/   -> the 3 character pngs
    src/assets/pageassets-clean/   -> the Minecraft page art
 ------------------------------------------------------------------ */
-import khushwantImage from "../assets/characters-clean/khushwant.png";
-import hrishikeshImage from "../assets/characters-clean/hrishikesh.png";
-import pradeepImage from "../assets/characters-clean/pradeep.png";
+import khushwantImage from "../assets/characters-clean/khushwant.webp";
+import hrishikeshImage from "../assets/characters-clean/hrishikesh.webp";
+import pradeepImage from "../assets/characters-clean/pradeep.webp";
 
-import bgVillage from "../assets/pageassets-clean/bg-village-sunset.png";
-import stoneStrip from "../assets/pageassets-clean/stone-strip-ground.png";
-import titleImg from "../assets/pageassets-clean/title-contact-us.png";
-import plankBanner from "../assets/pageassets-clean/plank-long-banner-footer.png";
-import bookOpen from "../assets/pageassets-clean/book-open.png";
-import lectern from "../assets/pageassets-clean/lectern-with-books.png";
-import quill from "../assets/pageassets-clean/feather-quill.png";
-import envelope from "../assets/pageassets-clean/envelope.png";
-import boardFrame from "../assets/pageassets-clean/board-stone-frame-lanterns.png";
-import stonePlate from "../assets/pageassets-clean/stone-texture-header-plate.png";
-import parchmentLarge from "../assets/pageassets-clean/parchment-large.png";
-import parchmentSmall from "../assets/pageassets-clean/parchment-card-small.png";
-import postsPair from "../assets/pageassets-clean/posts-wooden-pair.png";
-import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.png";
-import lanternHanging from "../assets/pageassets-clean/lantern-hanging.png";
-import craftingTable from "../assets/pageassets-clean/crafting-table-icon.png";
+import contactBackground from "../assets/pageassets-clean/contact-background.webp";
+import titleImg from "../assets/pageassets-clean/title-contact-us.webp";
+import plankBanner from "../assets/pageassets-clean/plank-long-banner-footer.webp";
+import bookOpen from "../assets/pageassets-clean/book-open.webp";
+import lectern from "../assets/pageassets-clean/lectern-with-books.webp";
+import quill from "../assets/pageassets-clean/feather-quill.webp";
+import envelope from "../assets/pageassets-clean/envelope.webp";
+import stonePlate from "../assets/pageassets-clean/stone-texture-header-plate.webp";
+import boardFrame from "../assets/pageassets-clean/board-stone-frame-lanterns.webp";
+import parchmentLarge from "../assets/pageassets-clean/parchment-large.webp";
+import parchmentSmall from "../assets/pageassets-clean/parchment-card-small.webp";
+import postsPair from "../assets/pageassets-clean/posts-wooden-pair.webp";
+import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.webp";
+import lanternHanging from "../assets/pageassets-clean/lantern-hanging.webp"; // eslint-disable-line no-unused-vars
 
 import Navbar from "../components/Navbar";
 
@@ -54,6 +53,10 @@ const teamMembers = [
 
 // Opening animation style: "smooth" (fluid, default) or "blocky" (chunky Minecraft steps)
 const ANIMATION = "smooth";
+
+// While testing, ignore the OS "reduce motion" setting so the opening animation always plays.
+// Set to false before shipping if you want to respect the visitor's OS setting.
+const IGNORE_REDUCED_MOTION = true;
 
 /* ------------------------------------------------------------------
    TAILWIND HELPERS
@@ -97,23 +100,22 @@ const EASE_BLOCKY = cx(
   "[--e-fade:steps(6,end)]"
 );
 
-/* opening animation classes (keyframes live in index.css) */
-const A_TITLE = "[animation:mc-title-in_0.8s_var(--e-title)_0.35s_backwards]";
-const A_PLANK = "[animation:mc-plank-in_0.7s_var(--e-plank)_0.7s_backwards]";
-const A_DROP = "[animation:mc-drop_1.1s_var(--e-drop)_0.8s_backwards]";
-const A_RISE = "[animation:mc-rise_1s_var(--e-rise)_0.7s_backwards]";
-const A_POP_H2 = "[animation:mc-pop_0.55s_var(--e-pop)_1.5s_backwards]";
-const A_SPAWN = "[animation:mc-spawn_0.9s_var(--e-fade)_1.65s_backwards]";
-const A_FADE_CARD = "[animation:mc-fade_0.8s_var(--e-fade)_1.65s_backwards]";
-const A_POP_INFO = "[animation:mc-pop_0.55s_var(--e-pop)_1.8s_backwards]";
-const A_POP_HEAD = "[animation:mc-pop_0.55s_var(--e-pop)_1.95s_backwards]";
-const A_POP_CARD = "[animation:mc-pop_0.55s_var(--e-pop)_backwards]"; // delay set per card
-const A_FOOTER = "[animation:mc-footer-rise_0.7s_var(--e-rise)_2.4s_backwards]";
-const A_POSTS = "[animation:mc-fade_0.9s_var(--e-fade)_0.7s_backwards]";
-const A_GLOW =
-  "[animation:mc-flicker_3.6s_steps(1,end)_infinite,mc-fade_1s_var(--e-fade)_1.7s_backwards]";
-const A_EMBER_1 = "[animation:mc-embers_9s_linear_infinite]";
-const A_EMBER_2 = "[animation:mc-embers_12s_linear_4.5s_infinite]";
+/* opening animation classes (defined in the injected <style> below) */
+const A_TITLE = "mc-a-title";
+const A_PLANK = "mc-a-plank";
+const A_DROP = "mc-a-drop";
+const A_RISE = "mc-a-rise";
+const A_POP_H2 = "mc-a-pop-h2";
+const A_SPAWN = "mc-a-spawn";
+const A_FADE_CARD = "mc-a-fade-card";
+const A_POP_INFO = "mc-a-pop-info";
+const A_POP_HEAD = "mc-a-pop-head";
+const A_POP_CARD = "mc-a-pop-card"; // delay set inline per card
+const A_FOOTER = "mc-a-footer"; // eslint-disable-line no-unused-vars
+const A_POSTS = "mc-a-posts";
+const A_GLOW = "mc-a-glow"; // eslint-disable-line no-unused-vars
+const A_EMBER_1 = "mc-a-ember-1";
+const A_EMBER_2 = "mc-a-ember-2";
 
 const CARD_DELAYS = ["2.05s", "2.15s", "2.25s", "2.35s"];
 
@@ -134,13 +136,33 @@ const WOOD_BTN = cx(
 );
 const WOOD_BTN_STYLE = artOver(woodPlank, "rgba(60,32,12,0.5)");
 
+/* < > arrows on the member list */
+const ARROW_BTN = cx(
+  "pointer-events-auto flex flex-none items-center justify-center text-[#f1dcae] leading-none",
+  "h-[40px] w-[26px] text-[16px]",
+  "min-[701px]:h-[max(30px,2.9cqw)] min-[701px]:w-[max(18px,1.9cqw)] min-[701px]:text-[length:max(11px,1.25cqw)]",
+  "[text-shadow:2px_2px_0_#2a1608]",
+  "border-[3px] border-solid border-[#3a2110]",
+  "[box-shadow:inset_0_0_0_2px_rgba(255,220,160,0.25),0_3px_0_rgba(0,0,0,0.4)]",
+  "transition-[opacity,filter] duration-150",
+  "hover:brightness-110 active:brightness-90",
+  "disabled:cursor-default disabled:opacity-30 disabled:hover:brightness-100",
+  HEAD,
+  FILL,
+  PIXEL,
+  FOCUS_GOLD
+);
+
 /* page shade (readability overlay) */
+// eslint-disable-next-line no-unused-vars
 const SHADE_DESKTOP =
   "radial-gradient(ellipse at 50% 58%, rgba(0,0,0,0) 52%, rgba(6,3,14,0.42) 100%), linear-gradient(180deg, rgba(10,6,20,0.45) 0%, rgba(10,6,20,0) 35%, rgba(10,6,20,0.12) 100%), linear-gradient(rgba(8,5,18,0.24), rgba(8,5,18,0.24))";
+// eslint-disable-next-line no-unused-vars
 const SHADE_MOBILE =
   "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(6,3,14,0.4) 100%), linear-gradient(180deg, rgba(10,6,20,0.35) 0%, rgba(10,6,20,0) 25%), linear-gradient(180deg, rgba(255,140,40,0.3) 0%, rgba(255,140,40,0) 60%), linear-gradient(rgba(8,5,18,0.24), rgba(8,5,18,0.24))";
 
 /* lantern glow (desktop) */
+// eslint-disable-next-line no-unused-vars
 const GLOW =
   "radial-gradient(ellipse 7.8% 12% at 10.3% 33%, rgba(255,190,90,0.5) 0%, rgba(255,150,50,0.2) 45%, rgba(255,150,50,0) 100%), radial-gradient(ellipse 7.8% 12% at 89.7% 33%, rgba(255,190,90,0.5) 0%, rgba(255,150,50,0.2) 45%, rgba(255,150,50,0) 100%), radial-gradient(ellipse 10.3% 34% at 16.4% 40%, rgba(255,170,60,0.1) 0%, rgba(255,170,60,0) 100%), radial-gradient(ellipse 10.3% 34% at 83.6% 40%, rgba(255,170,60,0.1) 0%, rgba(255,170,60,0) 100%)";
 
@@ -213,13 +235,43 @@ const contactPageAnimations = `\
   66% { opacity: 0.72; }
   81% { opacity: 0.92; }
 }
+@keyframes contact-lantern-air {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.6deg); }
+  25% { transform: translate3d(2px, 1px, 0) rotate(0.35deg); }
+  50% { transform: translate3d(0, 2px, 0) rotate(0.6deg); }
+  75% { transform: translate3d(-2px, 1px, 0) rotate(-0.35deg); }
+}
+@keyframes contact-lantern-blink {
+  0%, 100% { opacity: 0.94; filter: brightness(1); }
+  22% { opacity: 1; filter: brightness(1.08); }
+  48% { opacity: 0.86; filter: brightness(0.92); }
+  72% { opacity: 0.98; filter: brightness(1.04); }
+}
 @keyframes mc-embers {
   0%   { transform: translate3d(0, 0, 0); opacity: 0; }
   15%  { opacity: 1; }
   50%  { transform: translate3d(14px, -14vh, 0); opacity: 0.85; }
   85%  { opacity: 0.9; }
   100% { transform: translate3d(-10px, -26vh, 0); opacity: 0; }
-}\n`;
+}
+
+/* animation classes (plain CSS so Tailwind never has to parse them) */
+.mc-a-title     { animation: mc-title-in 0.8s var(--e-title) 0.35s backwards; }
+.mc-a-plank     { animation: mc-plank-in 0.7s var(--e-plank) 0.7s backwards; }
+.mc-a-drop      { animation: mc-drop 1.1s var(--e-drop) 0.8s backwards; }
+.mc-a-rise      { animation: mc-rise 1s var(--e-rise) 0.7s backwards; }
+.mc-a-pop-h2    { animation: mc-pop 0.55s var(--e-pop) 1.5s backwards; }
+.mc-a-spawn     { animation: mc-spawn 0.9s var(--e-fade) 1.65s backwards; }
+.mc-a-fade-card { animation: mc-fade 0.8s var(--e-fade) 1.65s backwards; }
+.mc-a-pop-info  { animation: mc-pop 0.55s var(--e-pop) 1.8s backwards; }
+.mc-a-pop-head  { animation: mc-pop 0.55s var(--e-pop) 1.95s backwards; }
+.mc-a-pop-card  { animation: mc-pop 0.55s var(--e-pop) backwards; } /* delay set inline per card */
+.mc-a-footer    { animation: mc-footer-rise 0.7s var(--e-rise) 2.4s backwards; }
+.mc-a-posts     { animation: mc-fade 0.9s var(--e-fade) 0.7s backwards; }
+.mc-a-glow      { animation: mc-flicker 3.6s steps(1,end) infinite, mc-fade 1s var(--e-fade) 1.7s backwards; }
+.mc-a-ember-1   { animation: mc-embers 9s linear infinite; }
+.mc-a-ember-2   { animation: mc-embers 12s linear 4.5s infinite; }
+`;
 
 function Contact() {
   useEffect(() => {
@@ -252,6 +304,7 @@ function Contact() {
   const [ready, setReady] = useState(false);
   const [reduceMotion] = useState(
     () =>
+      !IGNORE_REDUCED_MOTION &&
       typeof window !== "undefined" &&
       !!window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -260,6 +313,45 @@ function Contact() {
   // animations run only when the page is ready and the visitor allows motion
   const anim = (cls) => (ready && !reduceMotion ? cls : "");
   const hold = ready ? "" : "opacity-0";
+
+  // member list: scroll position drives the < > arrows
+  const listRef = useRef(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(true);
+
+  const updateArrows = useCallback(() => {
+    const el = listRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 2);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+  }, []);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return undefined;
+    updateArrows();
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(updateArrows);
+      ro.observe(el);
+    }
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+      if (ro) ro.disconnect();
+    };
+  }, [updateArrows]);
+
+  const scrollList = (dir) => {
+    const el = listRef.current;
+    if (!el) return;
+    const first = el.firstElementChild;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 10;
+    const step = first ? first.getBoundingClientRect().width + gap : el.clientWidth * 0.6;
+    el.scrollBy({ left: dir * step, behavior: reduceMotion ? "auto" : "smooth" });
+  };
 
   // start the opening animation only after fonts + images have finished loading,
   // so it never stutters while files are still downloading
@@ -278,11 +370,13 @@ function Contact() {
         : new Promise((resolve) =>
             window.addEventListener("load", resolve, { once: true })
           );
-    Promise.all([loaded, document.fonts ? document.fonts.ready : null]).then(go);
-    const fallback = setTimeout(go, 3000); // never leave the page hidden
+    Promise.all([
+      loaded,
+      document.fonts ? document.fonts.ready : Promise.resolve(),
+    ]).then(go);
+    const fallback = setTimeout(go, 1200); // safety fallback
 
-
-  return () => {
+    return () => {
       cancelled = true;
       clearTimeout(fallback);
     };
@@ -316,7 +410,6 @@ function Contact() {
   return (
     <>
       {animationStyles}
-      <Navbar/>
     <div
       className={cx(
         "relative isolate flex min-h-[100dvh] w-full flex-col overflow-x-clip",
@@ -328,33 +421,12 @@ function Contact() {
         "[--strip-h:56px]",
         "min-[701px]:[--u:min(1vw,1.36vh)]",
         "min-[701px]:[--strip-h:clamp(40px,calc(var(--u)_*_7),100px)]",
-        "min-[701px]:[--board-bottom-pad:clamp(24px,calc(var(--u)_*_5.5),110px)]",
+        "min-[701px]:[--board-bottom-pad:clamp(20px,calc(var(--u)_*_4),80px)]",
         ANIMATION === "blocky" ? EASE_BLOCKY : EASE_SMOOTH
       )}
-      style={art(bgVillage)}
+      style={art(contactBackground)}
     >
-      {/* readability shade */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[-1] min-[701px]:hidden"
-        style={{ backgroundImage: SHADE_MOBILE }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[-1] max-[700px]:hidden"
-        style={{ backgroundImage: SHADE_DESKTOP }}
-      />
 
-      {/* stone ground strip along the bottom */}
-      <div
-        aria-hidden="true"
-        className={cx(
-          "pointer-events-none absolute inset-x-0 bottom-0 z-[-1] h-[var(--strip-h)]",
-          "bg-repeat-x [background-size:auto_100%] bg-bottom min-[701px]:bg-left-bottom",
-          PIXEL
-        )}
-        style={art(stoneStrip)}
-      />
 
       {/* ================================ MAIN ================================ */}
       <main className={cx("relative flex-[1_0_auto] min-[701px]:flex min-[701px]:flex-col", hold)}>
@@ -381,7 +453,7 @@ function Contact() {
         />
 
         {/* ---------- heading: stone title + wooden subtitle plank ---------- */}
-        <section className="px-[14px] pt-[130px] text-center min-[701px]:px-4 min-[701px]:pt-[140px]">
+        <section className="px-[14px] pt-[100px] text-center min-[701px]:px-4 min-[701px]:pt-[80px]">
           <h1
             className={cx(
               "mx-auto mb-2 aspect-[1400/256] w-[min(78vw,340px)]",
@@ -398,7 +470,7 @@ function Contact() {
           </h1>
           <p
             className={cx(
-              "inline-block max-w-full text-[#3b2414]",
+              "inline-block max-w-full text-white",
               "[padding:9px_22px] text-[15px] leading-[1.1]",
               "min-[701px]:[padding:clamp(7px,calc(var(--u)_*_1.1),15px)_clamp(26px,calc(var(--u)_*_3.4),48px)]",
               "min-[701px]:text-[length:clamp(13px,calc(var(--u)_*_1.6),22px)] min-[701px]:leading-[1.15]",
@@ -416,32 +488,21 @@ function Contact() {
         {/* ------------------- book column + stone board ------------------- */}
         <div
           className={cx(
-            "relative mx-auto grid w-full max-w-[520px] grid-cols-[minmax(0,1fr)] gap-[26px]",
+            "relative mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,1fr)] gap-[16px]",
             "[padding:40px_14px_28px] max-[380px]:px-[10px]",
             "[container-type:inline-size]",
             "[filter:drop-shadow(0_0_2px_rgba(0,0,0,0.9))_drop-shadow(0_8px_16px_rgba(0,0,0,0.6))]",
-            "min-[701px]:mt-auto min-[701px]:mb-0 min-[701px]:max-w-[min(1400px,calc(var(--u)_*_93.7))]",
-            "min-[701px]:grid-cols-[minmax(0,29fr)_minmax(0,66fr)] min-[701px]:items-start min-[701px]:gap-x-[3%] min-[701px]:gap-y-0",
-            "min-[701px]:[padding:clamp(6px,calc(var(--u)_*_0.9),14px)_2%_var(--board-bottom-pad)]"
+            "min-[701px]:mt-auto min-[701px]:mb-0 min-[701px]:max-w-[min(1330px,98vw)]",
+            "min-[701px]:grid-cols-[minmax(0,30fr)_minmax(0,70fr)] min-[701px]:items-start min-[701px]:gap-x-[1%] min-[701px]:gap-y-0",
+            "min-[701px]:[padding:clamp(6px,calc(var(--u)_*_0.9),14px)_1%_var(--board-bottom-pad)]"
           )}
         >
-          {/* lantern glow (desktop) */}
-          <div
-            aria-hidden="true"
-            className={cx(
-              "pointer-events-none absolute z-[3] max-[700px]:hidden",
-              "col-start-2 col-end-3 row-start-1 row-end-2 [inset:0_-8%] [will-change:opacity]",
-              anim(A_GLOW)
-            )}
-            style={{ backgroundImage: GLOW }}
-          />
-
           {/* wooden posts that hold the board (desktop) */}
           <div
             aria-hidden="true"
             className={cx(
               "pointer-events-none absolute z-[-1] max-[700px]:hidden",
-              "col-start-2 col-end-3 row-start-1 row-end-2 left-[14%] top-[78%] w-[72%]",
+              "col-start-2 col-end-3 row-start-1 row-end-2 left-[11%] top-[78%] w-[72%]",
               "h-[calc(22%_+_var(--board-bottom-pad)_-_var(--strip-h)_*_0.083_+_12px)]",
               "bg-bottom bg-no-repeat [background-size:100%_auto]",
               PIXEL,
@@ -454,7 +515,7 @@ function Contact() {
           <section
             aria-labelledby="email-heading"
             className={cx(
-              "relative isolate grid aspect-[1088/674] w-full max-w-[420px] grid-cols-2 items-center justify-items-center justify-self-center",
+              "relative isolate grid aspect-[1088/674] w-full max-w-[460px] grid-cols-2 items-center justify-items-center justify-self-center",
               "text-[#3b2414] [padding:3.5%_11%_12.5%_11%]",
               "min-[701px]:max-w-none min-[701px]:self-end",
               "min-[701px]:mb-[calc(51.1%_-_var(--board-bottom-pad)_+_var(--strip-h)_*_0.083_-_10px)]",
@@ -480,28 +541,28 @@ function Contact() {
 
             <h2
               id="email-heading"
-              className="text-center text-[#3b2414] leading-none text-[length:clamp(15px,4.6cqw,22px)] min-[701px]:text-[length:max(12px,2cqw)]"
+              className="text-center text-[#3b2414] leading-none text-[length:clamp(15px,4.6cqw,22px)] min-[701px]:text-[length:max(12px,2.2cqw)]"
             >
               <img
                 src={quill}
                 alt=""
                 aria-hidden="true"
                 className={cx(
-                  "mx-auto mb-[0.3em] block aspect-[749/801] w-[clamp(34px,11cqw,56px)] min-[701px]:w-[clamp(40px,5.6cqw,84px)]",
+                  "mx-auto mb-[0.3em] block aspect-[749/801] w-[clamp(34px,11cqw,56px)] min-[701px]:w-[clamp(40px,6.3cqw,96px)]",
                   PIXEL
                 )}
               />
               Email Support
             </h2>
 
-            <div className="flex w-full min-w-0 flex-col items-center gap-2 min-[701px]:gap-[1.2cqw]">
+            <div className="flex w-full min-w-0 flex-col items-center gap-2 min-[701px]:gap-[1.4cqw]">
               {["gdg@sggs.ac.in", "swag@sggs.ac.in"].map((mail) => (
                 <a
                   key={mail}
                   href={`mailto:${mail}`}
                   className={cx(
                     "flex max-w-full flex-col items-center text-center text-[#3b2414] underline underline-offset-[3px] [overflow-wrap:anywhere]",
-                    "leading-[1.05] text-[length:clamp(12px,3.7cqw,17px)] min-[701px]:text-[length:max(10px,1.45cqw)]",
+                    "leading-[1.05] text-[length:clamp(12px,3.7cqw,17px)] min-[701px]:text-[length:max(10px,1.6cqw)]",
                     "min-[701px]:hover:text-[#6b2f0c]",
                     FOCUS_BROWN
                   )}
@@ -511,7 +572,7 @@ function Contact() {
                     alt=""
                     aria-hidden="true"
                     className={cx(
-                      "mb-[2px] block aspect-[616/443] w-[clamp(20px,6.5cqw,30px)] min-[701px]:w-[clamp(24px,2.6cqw,36px)]",
+                      "mb-[2px] block aspect-[616/443] w-[clamp(20px,6.5cqw,30px)] min-[701px]:w-[clamp(26px,3cqw,44px)]",
                       PIXEL
                     )}
                   />
@@ -526,45 +587,64 @@ function Contact() {
             id="contact"
             aria-labelledby="contact-heading"
             className={cx(
-              "relative block w-full text-[#f4f1e8] [--bs:1.065]",
+              // desktop size knobs: --is = header + info plate + avatar frame, --cs = member list (cards, arrows, plate).
+              // bigger number = bigger. (--bs is no longer used for these.)
+              "relative block w-full text-[#f4f1e8] [--bs:0.72] [--is:0.9] [--cs:1.3]",
+              // mobile frame slices: --hn = natural art height, --m = stretched middle height
+              "[--k:1.35] [--hn:calc(100cqw_*_0.7026_*_var(--k))] [--m:calc(var(--board-h)_-_var(--hn)_*_0.67)]",
               // mobile: board art stretched to --board-h, derived from the flip-card height
-              "[--win:clamp(190px,52vw,260px)] [--card-h:calc(var(--win)_+_84px)] [--board-h:calc((var(--card-h)_+_56px)_/_0.7)]",
-              "[padding:calc(var(--board-h)_*_0.185)_12%_0_11.5%] [background-size:100%_var(--board-h)] bg-top bg-no-repeat",
+              "[--win:clamp(170px,45vw,225px)] [--card-h:calc(var(--win)_+_84px)] [--board-h:calc((var(--card-h)_+_56px)_/_0.7)]",
+              "[padding:calc(var(--board-h)_*_0.185)_18.5%_0_18%] bg-top bg-no-repeat",
               // desktop: board fills its box
-              "min-[701px]:grid min-[701px]:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] min-[701px]:grid-rows-[auto_auto_auto_auto]",
-              "min-[701px]:content-start min-[701px]:items-stretch min-[701px]:gap-x-[3%] min-[701px]:gap-y-0",
-              "min-[701px]:aspect-[1288/905] min-[701px]:[padding:12.5%_12.3%_12.6%_12.1%]",
-              "min-[701px]:[background-size:100%_100%] min-[701px]:bg-center",
+              // NOTE: if board-stone-frame-lanterns.webp is not 1288x905, put its real W/H in aspect-[W/H]
+              "min-[701px]:grid min-[701px]:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] min-[701px]:grid-rows-[auto_auto_auto_auto]",
+              "min-[701px]:content-evenly min-[701px]:items-stretch min-[701px]:gap-x-[3%] min-[701px]:gap-y-0",
+              // BOARD SIZE (desktop): the frame fills the right column and sticks out to the left by (grow - 1).
+              // If you change --board-grow, also move two things by the same amount:
+              //   posts:  left-[11%]  = 14% - half of the extra   (1.06 -> extra 6% -> 14% - 3%)
+              //   glow:   [inset:0_-8%_0_-14%] left value = -8% - the extra
+              // PADDING = the parchment opening of the frame art: top / right / bottom / left.
+              "min-[701px]:[--board-grow:1.06] min-[701px]:w-[calc(100%_*_var(--board-grow))] min-[701px]:max-w-none min-[701px]:justify-self-end",
+              "min-[701px]:aspect-[1288/905] min-[701px]:[padding:15%_18.5%_17%_18%]",
+              "min-[701px]:[background-size:100%_100%] min-[701px]:bg-center min-[701px]:[background-image:var(--board-img)]",
               PIXEL,
               anim(A_RISE)
             )}
-            style={art(boardFrame)}
+            style={{ "--board-img": `url("${boardFrame}")` }}
           >
-            {/* stone wall inside the frame */}
-            <div
-              aria-hidden="true"
-              className={cx(
-                "pointer-events-none absolute z-0 left-[11%] right-[11.6%]",
-                "top-[calc(var(--board-h)_*_0.145)] h-[calc(var(--board-h)_*_0.74)]",
-                "min-[701px]:top-[14.5%] min-[701px]:bottom-[11.5%] min-[701px]:h-auto",
-                "[box-shadow:inset_0_0_0_3px_rgba(0,0,0,0.35),inset_0_6px_16px_rgba(0,0,0,0.45)]",
-                FILL,
-                PIXEL
-              )}
-              style={artOver(stonePlate, "rgba(36,26,22,0.38)")}
-            />
 
-            {/* two full-size lanterns over the small baked-in ones (mobile) */}
+            {/* mobile frame art, drawn in 3 slices so the lanterns keep their real proportions:
+                top + bottom at natural aspect, only the plain stone middle is stretched */}
             <div
               aria-hidden="true"
-              className={cx(
-                "pointer-events-none absolute z-[2] -left-[6px] -right-[6px] min-[701px]:hidden",
-                "top-[calc(var(--board-h)_*_0.124)] h-[calc(var(--board-h)_*_0.29)]",
-                "bg-no-repeat [background-size:auto_100%] [background-position:left_top,right_top]",
-                PIXEL
-              )}
+              className={cx("pointer-events-none absolute inset-x-0 top-0 z-0 bg-no-repeat min-[701px]:hidden", PIXEL)}
               style={{
-                backgroundImage: `url(${lanternHanging}), url(${lanternHanging})`,
+                height: "calc(var(--hn) * 0.45)",
+                backgroundImage: `url(${boardFrame})`,
+                backgroundSize: "100% var(--hn)",
+                backgroundPosition: "center top",
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className={cx("pointer-events-none absolute inset-x-0 z-0 bg-no-repeat min-[701px]:hidden", PIXEL)}
+              style={{
+                top: "calc(var(--hn) * 0.45 - 1px)",
+                height: "calc(var(--m) + 2px)",
+                backgroundImage: `url(${boardFrame})`,
+                backgroundSize: "100% calc(var(--m) / 0.33)",
+                backgroundPosition: "0 calc(var(--m) * -1.3636)",
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className={cx("pointer-events-none absolute inset-x-0 z-0 bg-no-repeat min-[701px]:hidden", PIXEL)}
+              style={{
+                top: "calc(var(--board-h) - var(--hn) * 0.22)",
+                height: "calc(var(--hn) * 0.22)",
+                backgroundImage: `url(${boardFrame})`,
+                backgroundSize: "100% var(--hn)",
+                backgroundPosition: "center bottom",
               }}
             />
 
@@ -573,13 +653,13 @@ function Contact() {
               id="contact-heading"
               className={cx(
                 "relative z-[1] mx-auto mb-2 w-[70%] text-center text-[#f4f1e8] leading-[1.2]",
-                "[padding:0.5em_0.4em_0.55em] text-[length:clamp(8px,2.9cqw,12px)]",
+                "[padding:0.5em_0.4em_0.55em] text-[length:clamp(9px,3.15cqw,13px)]",
                 "[text-shadow:2px_2px_0_#1b1b1b]",
                 "border-[3px] border-solid border-[#1f1f1f]",
                 "[box-shadow:inset_0_0_0_2px_rgba(190,190,190,0.35),0_3px_0_rgba(0,0,0,0.35)]",
                 "min-[701px]:col-span-full min-[701px]:row-start-1 min-[701px]:justify-self-center min-[701px]:w-[54%] min-[701px]:mx-0",
-                "min-[701px]:mb-[calc(1.1cqw_*_var(--bs))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
-                "min-[701px]:text-[length:max(9px,calc(1.1cqw_*_var(--bs)))]",
+                "min-[701px]:mb-[calc(1.1cqw_*_var(--is))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
+                "min-[701px]:text-[length:max(9px,calc(1.1cqw_*_var(--is)))]",
                 HEAD,
                 COVER,
                 PIXEL,
@@ -597,7 +677,7 @@ function Contact() {
                 className={cx(
                   "relative z-[1] hidden min-w-0 overflow-hidden min-[701px]:block",
                   "min-[701px]:col-start-1 min-[701px]:row-start-2 min-[701px]:row-end-5 min-[701px]:self-stretch",
-                  "[border-width:max(6px,calc(0.75cqw_*_var(--bs)))]",
+                  "[border-width:max(6px,calc(0.75cqw_*_var(--is)))]",
                   FRAME_BORDER,
                   FRAME_BG,
                   "[box-shadow:0_0_0_2px_#1a0f08,inset_0_0_0_2px_#24140a,inset_0_0_18px_rgba(0,0,0,0.6),0_4px_0_2px_rgba(0,0,0,0.35)]",
@@ -608,7 +688,7 @@ function Contact() {
                   src={selectedContact.image}
                   alt={`${selectedContact.name} Minecraft character`}
                   className={cx(
-                    "absolute inset-0 block h-full w-full scale-[1.2] origin-[50%_52%] object-cover object-top",
+                    "absolute inset-0 block h-full w-full object-cover object-top",
                     "[filter:drop-shadow(0_6px_0_rgba(0,0,0,0.35))]",
                     PIXEL
                   )}
@@ -620,7 +700,7 @@ function Contact() {
                 className={cx(
                   "relative z-[1] hidden min-w-0 flex-col items-center justify-center text-center text-[#3b2414] [overflow-wrap:anywhere]",
                   "min-[701px]:flex min-[701px]:col-start-2 min-[701px]:row-start-2",
-                  "min-[701px]:min-h-[calc(8cqw_*_var(--bs))] [padding:4.5%_8%]",
+                  "min-[701px]:min-h-[calc(8cqw_*_var(--is))] [padding:4.5%_8%]",
                   "[filter:drop-shadow(0_3px_0_rgba(0,0,0,0.35))]",
                   FILL,
                   PIXEL,
@@ -629,16 +709,16 @@ function Contact() {
                 style={art(parchmentLarge)}
               >
                 <div>
-                  <h3 className="mb-[0.15em] text-[#2b1608] leading-[0.95] [overflow-wrap:break-word] [text-wrap:balance] text-[length:max(13px,calc(2.25cqw_*_var(--bs)))]">
+                  <h3 className="mb-[0.15em] text-[#2b1608] leading-[0.95] [overflow-wrap:break-word] [text-wrap:balance] text-[length:max(13px,calc(2.25cqw_*_var(--is)))]">
                     {selectedContact.name}
                   </h3>
-                  <p className="my-[0.1em] text-[#3b2414] leading-none text-[length:max(11px,calc(1.6cqw_*_var(--bs)))]">
+                  <p className="my-[0.1em] text-[#3b2414] leading-none text-[length:max(11px,calc(1.6cqw_*_var(--is)))]">
                     {selectedContact.role}
                   </p>
                   <a
                     href={`tel:${selectedContact.phone}`}
                     className={cx(
-                      "text-[#5a2d0a] underline underline-offset-[3px] hover:text-[#8a3d0c] leading-none text-[length:max(11px,calc(1.6cqw_*_var(--bs)))]",
+                      "text-[#5a2d0a] underline underline-offset-[3px] hover:text-[#8a3d0c] leading-none text-[length:max(11px,calc(1.6cqw_*_var(--is)))]",
                       FOCUS_BROWN
                     )}
                   >
@@ -656,7 +736,7 @@ function Contact() {
               >
                 <div
                   className={cx(
-                    "relative h-full w-full [transform-style:preserve-3d] transition-transform duration-[600ms] ease-[ease] motion-reduce:transition-none",
+                    "relative h-full w-full [transform-style:preserve-3d] transition-transform duration-[600ms] ease-[ease]",
                     showInfo ? "[transform:rotateY(180deg)]" : ""
                   )}
                 >
@@ -732,13 +812,13 @@ function Contact() {
             <h3
               className={cx(
                 "relative z-[1] block text-center text-[#1b1b1b] leading-[1.2]",
-                "w-[calc(100%_+_11.5%_+_12%)] [margin:0_-12%_0_-11.5%] [padding:0.7em_0.4em_0.75em] text-[length:clamp(9px,3.3cqw,13px)]",
+                "w-[calc(100%_-_16px)] [margin:0_8px] [padding:0.7em_0.4em_0.75em] text-[length:clamp(9px,3.3cqw,13px)]",
                 "[text-shadow:0_1px_0_rgba(255,255,255,0.45)]",
                 "border-[3px] border-solid border-[#2e2e2e]",
                 "[box-shadow:inset_0_0_0_2px_rgba(255,255,255,0.3),0_3px_0_rgba(0,0,0,0.35)]",
                 "min-[701px]:col-start-2 min-[701px]:row-start-3 min-[701px]:self-end min-[701px]:w-full",
-                "min-[701px]:[margin:calc(1.3cqw_*_var(--bs))_0_calc(0.8cqw_*_var(--bs))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
-                "min-[701px]:text-[length:max(8px,calc(0.95cqw_*_var(--bs)))]",
+                "min-[701px]:[margin:calc(1.3cqw_*_var(--cs))_0_calc(0.8cqw_*_var(--cs))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
+                "min-[701px]:text-[length:max(8px,calc(0.95cqw_*_var(--cs)))]",
                 HEAD,
                 COVER,
                 PIXEL,
@@ -749,20 +829,27 @@ function Contact() {
               OTHER TEAM MEMBERS
             </h3>
 
-            {/* ---- member cards: scroll-snap row (wooden tray on mobile) ---- */}
+            {/* ---- member cards: scroll-snap row with < > arrows (wooden tray on mobile) ---- */}
             <div
               className={cx(
-                "relative z-[1] flex min-w-0 flex-nowrap items-start overflow-x-auto overflow-y-hidden min-h-max",
+                "relative z-[1] min-w-0 w-[calc(100%_-_16px)] [margin:0_8px]",
+                "min-[701px]:col-start-2 min-[701px]:row-start-4 min-[701px]:m-0 min-[701px]:w-full min-[701px]:max-w-full"
+              )}
+            >
+            <div
+              ref={listRef}
+              className={cx(
+                "relative flex w-full min-w-0 flex-nowrap items-start overflow-x-auto overflow-y-hidden min-h-max",
                 "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]",
                 "[scroll-snap-type:x_mandatory]",
-                // mobile tray
-                "w-[calc(100%_+_11.5%_+_12%)] [margin:0_-12%_0_-11.5%] gap-[10px] [padding:12px_10px_24px] [scroll-padding-inline:10px]",
+                // mobile tray (30px side padding leaves room for the arrows)
+                "gap-[10px] [padding:12px_30px_24px] [scroll-padding-inline:30px]",
                 "max-[700px]:border-[4px] max-[700px]:border-solid max-[700px]:border-[#7a4e27] max-[700px]:border-t-0",
                 "max-[700px]:bg-[linear-gradient(180deg,#3b2616,#2a1a10)]",
                 "max-[700px]:[box-shadow:0_0_0_2px_#1a0f08,inset_0_0_14px_rgba(0,0,0,0.5)]",
                 // desktop row
-                "min-[701px]:col-start-2 min-[701px]:row-start-4 min-[701px]:m-0 min-[701px]:w-full min-[701px]:max-w-full",
-                "min-[701px]:gap-[calc(1cqw_*_var(--bs))] min-[701px]:[padding:10px_8px_24px] min-[701px]:[scroll-padding-inline:8px]"
+                "min-[701px]:max-w-full min-[701px]:items-stretch",
+                "min-[701px]:gap-[calc(1cqw_*_var(--cs))] min-[701px]:[padding:10px_max(18px,2.1cqw)_24px] min-[701px]:[scroll-padding-inline:max(18px,2.1cqw)]"
               )}
             >
               {teamMembers.map((member, index) => {
@@ -779,9 +866,9 @@ function Contact() {
                     }}
                     className={cx(
                       "snap-start shrink-0 grow-0 aspect-[1032/488]",
-                      "[--cw:clamp(132px,38vw,168px)] min-[701px]:[--cw:clamp(96px,calc(13.5cqw_*_var(--bs)),176px)]",
+                      "[--cw:clamp(132px,38vw,168px)] min-[701px]:[--cw:calc((100%_-_calc(1cqw_*_var(--cs)))_/_2)]",
                       "w-[var(--cw)] min-w-[var(--cw)] max-w-[var(--cw)]",
-                      "flex flex-col items-center justify-center text-center text-[#3b2414] [padding:5%_9%] [overflow-wrap:anywhere]",
+                      "flex flex-col items-center justify-center text-center text-[#3b2414] [padding:5%_9%] min-[701px]:[padding:calc(var(--cw)_*_0.05)_calc(var(--cw)_*_0.07)] [overflow-wrap:anywhere]",
                       "[transition:transform_0.12s_steps(2),translate_0.12s_steps(2),filter_0.12s_steps(2)] motion-reduce:[transition:none]",
                       selected
                         ? "-translate-y-[3px] [filter:drop-shadow(0_0_6px_#ffd24a)_drop-shadow(0_0_2px_#ffd24a)] motion-reduce:translate-y-0"
@@ -792,48 +879,47 @@ function Contact() {
                       anim(A_POP_CARD)
                     )}
                   >
-                    <h4 className="mb-[0.2em] w-full text-[15px] leading-[0.95] text-[#2b1608] [text-wrap:balance] [overflow-wrap:anywhere] min-[701px]:text-[length:max(11px,calc(1.45cqw_*_var(--bs)))]">
+                    <h4 className="mb-[0.2em] w-full text-[15px] leading-[0.95] text-[#2b1608] [text-wrap:balance] [overflow-wrap:anywhere] min-[701px]:text-[length:max(11px,calc(1.45cqw_*_var(--cs)))]">
                       {member.name}
                     </h4>
-                    <p className="w-full text-[12px] leading-none text-[#3b2414] [overflow-wrap:anywhere] min-[701px]:text-[length:max(9px,calc(1.15cqw_*_var(--bs)))]">
+                    <p className="w-full text-[12px] leading-none text-[#3b2414] [overflow-wrap:anywhere] min-[701px]:text-[length:max(9px,calc(1.15cqw_*_var(--cs)))]">
                       {member.role}
                     </p>
                   </button>
                 );
               })}
             </div>
+
+            {/* < > arrows: show that the list scrolls */}
+            <div className="pointer-events-none absolute inset-y-0 left-[2px] z-[2] flex items-center pb-[14px]">
+              <button
+                type="button"
+                aria-label="Show previous team members"
+                disabled={!canLeft}
+                onClick={() => scrollList(-1)}
+                className={ARROW_BTN}
+                style={WOOD_BTN_STYLE}
+              >
+                &lt;
+              </button>
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 right-[2px] z-[2] flex items-center pb-[14px]">
+              <button
+                type="button"
+                aria-label="Show next team members"
+                disabled={!canRight}
+                onClick={() => scrollList(1)}
+                className={ARROW_BTN}
+                style={WOOD_BTN_STYLE}
+              >
+                &gt;
+              </button>
+            </div>
+            </div>
           </section>
         </div>
       </main>
 
-      {/* =============================== FOOTER =============================== */}
-      <footer
-        className={cx(
-          "relative z-[1] flex flex-none items-center justify-center self-center text-center text-[#2b1608] aspect-[1400/278] [padding:0_5%]",
-          "w-[min(calc(100%_-_84px),calc(var(--strip-h)_*_4.2))] [margin:12px_42px_calc(var(--strip-h)_*_0.083)_0]",
-          "text-[13px] leading-[1.05] [text-shadow:0_1px_0_rgba(255,226,170,0.5)]",
-          "min-[701px]:w-[calc(var(--strip-h)_*_4.2)] min-[701px]:[margin:0_0_calc(var(--strip-h)_*_0.083)]",
-          "min-[701px]:text-[length:clamp(10px,calc(var(--u)_*_1.3),18px)]",
-          FILL,
-          PIXEL,
-          hold,
-          anim(A_FOOTER)
-        )}
-        style={art(plankBanner)}
-      >
-        © 2026 HackFusion. All rights reserved.
-        {/* crafting table beside the plank */}
-        <img
-          src={craftingTable}
-          alt=""
-          aria-hidden="true"
-          className={cx(
-            "pointer-events-none absolute left-full top-1/2 ml-[6px] aspect-square w-9 -translate-y-1/2",
-            "min-[701px]:ml-2 min-[701px]:w-[clamp(22px,calc(var(--u)_*_3.2),44px)]",
-            PIXEL
-          )}
-        />
-      </footer>
     </div>
     </>
 
