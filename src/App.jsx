@@ -40,9 +40,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <CherryBlossom>
-                    <Home />
-                  </CherryBlossom>
+                  <Home />
                 }
               />
               <Route path="/contact" element={<Contact />} /> {/* ADDED */}

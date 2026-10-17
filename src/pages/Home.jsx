@@ -1,13 +1,20 @@
-import HeroSection from "../components/HeroSection"
-import Navbar from "../components/Navbar"
-import Info from "../components/Info"
+import HeroSection from "../components/HeroSection";
+import Navbar from "../components/Navbar";
+import Info from "../components/Info";
+import PrevWinners from "../components/PrevWinners";
+import Footer from "../components/Footer";
+import CherryBlossom from "../components/Cherryblossom"
 
-export default function Home(){
-    return(
+export default function Home() {
+    return (
         <div className="overflow-x-clip">
-            <Navbar></Navbar>
-            <HeroSection></HeroSection>
-            <Info></Info>
+            <Navbar />
+            <CherryBlossom>
+                <HeroSection />
+            </CherryBlossom>
+            <Info />
+            <PrevWinners />
+            <Footer />
         </div>
-    )
+    );
 }

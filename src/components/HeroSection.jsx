@@ -50,8 +50,8 @@ function McButton({ to, children, color = "#7d7d7d", disabled = false, delay = 0
 
 export default function HeroSection() {
     return (
-        <section id="home" className="relative w-full">
-            <ScrollFrames poster={HeroImg} scrollHeight="400vh">
+        <section id="home" className="relative z-0 w-full">
+            <ScrollFrames poster={HeroImg} scrollHeight="400vh" holdScreens={1}>
                 <div className="flex h-full flex-col items-center justify-center gap-6 px-4 pt-28 pb-16 sm:gap-8">
                     <motion.img
                         src={Logo}
