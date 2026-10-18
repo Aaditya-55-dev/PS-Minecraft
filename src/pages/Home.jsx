@@ -4,7 +4,7 @@ import Info from "../components/Info";
 import PrevWinners from "../components/PrevWinners";
 import Footer from "../components/Footer";
 import CherryBlossom from "../components/Cherryblossom"
-import PrizePool from "../components/PrizePool";
+// import PrizePool from "../components/PrizePool";
 import BookSection from "../components/BookSection"
 export default function Home() {
     return (
@@ -16,7 +16,7 @@ export default function Home() {
             <Info />
             <BookSection />
             <PrevWinners />
-            <PrizePool/>
+            {/* <PrizePool/> */}
             <Footer />
         </div>
     );
