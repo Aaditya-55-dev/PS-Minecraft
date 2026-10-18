@@ -14,77 +14,21 @@ html.lenis body {
   overflow: hidden;
 }
 
-@keyframes vines-drop-in {
-  from {
-    translate: 0 -150px;
-    opacity: 0;
-  }
-
-  to {
-    translate: 0 0;
-    opacity: 1;
-  }
-}
-@keyframes mcb-line-in {
-  from { opacity: 0; transform: translateY(0.16em); }
-  to { opacity: 1; transform: translateY(0); }
+.faq-scrollbar {
+  scrollbar-color: #c48a4b #342116;
+  scrollbar-width: thin;
 }
 
-@keyframes mcb-line-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-0.12em); }
-}
-@keyframes lantern-drop-in {
-  from { translate: 0 -220px; opacity: 0; }
-  to { translate: 0 0; opacity: 1; }
+.faq-scrollbar::-webkit-scrollbar {
+  width: 10px;
 }
 
-@keyframes lantern-sway {
-  from { rotate: -2deg; }
-  to { rotate: 2deg; }
-}
-.cave-torch-glow {
-  background:
-    radial-gradient(ellipse 17% 8% at 14% 12%, rgba(255, 174, 64, .7), rgba(255, 112, 24, .3) 38%, transparent 100%),
-    radial-gradient(ellipse 17% 8% at 86% 12%, rgba(255, 174, 64, .7), rgba(255, 112, 24, .3) 38%, transparent 100%),
-    radial-gradient(ellipse 17% 8% at 14% 44%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
-    radial-gradient(ellipse 17% 8% at 86% 44%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
-    radial-gradient(ellipse 17% 8% at 14% 74%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
-    radial-gradient(ellipse 17% 8% at 86% 74%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%);
+.faq-scrollbar::-webkit-scrollbar-track {
+  background: #342116;
 }
 
-@keyframes cave-torch-flicker {
-  0%, 100% { opacity: .48; }
-  35% { opacity: .78; }
-  72% { opacity: .58; }
-}
-
-@keyframes bee-flight-left {
-  0%, 100% { translate: 0 0; }
-  18% { translate: 3vw -4vh; }
-  42% { translate: 6vw 1vh; }
-  66% { translate: 5vw 3vh; }
-  84% { translate: 1vw 2vh; }
-}
-
-@keyframes bee-flight-right {
-  0%, 100% { translate: 0 0; }
-  18% { translate: -3vw 2vh; }
-  42% { translate: -6vw 3vh; }
-  66% { translate: -5vw 1vh; }
-  84% { translate: -1vw -4vh; }
-}
-
-.bee-orbit-left {
-  animation: bee-flight-left 26s ease-in-out infinite;
-}
-
-.bee-orbit-right {
-  animation: bee-flight-right 31s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .bee-orbit-left,
-  .bee-orbit-right {
-    animation: none;
-  }
+.faq-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid #342116;
+  border-radius: 999px;
+  background: #c48a4b;
 }
