@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import NavigationSigns from '../components/NavigationSigns';
+import Navbar from '../components/Navbar';
 import StructureWrapper from '../components/StructureWrapper';
 import ProblemCard from '../components/ProblemCard';
 import MinecraftModal from '../components/MinecraftModal';
@@ -31,7 +31,7 @@ export default function ProblemStatement() {
 
   return (
     <div className="problem-statements-page">
-      <NavigationSigns />
+      <Navbar />
 
       <StructureWrapper>
         {problemStatementsData.map((problem) => (

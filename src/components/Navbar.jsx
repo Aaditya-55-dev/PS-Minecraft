@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import { Link } from "react-router-dom"
 import chainSignA from "../assets/pageassets-clean/nav-sign-chain-a.WebP"
 import chainSignB from "../assets/pageassets-clean/nav-sign-chain-b.WebP"
-import activeRopeSign from "../assets/pageassets-clean/nav-sign-rope-active.WebP"
 import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.Webp"
 
 const MotionLink = motion.create(Link)
@@ -17,7 +16,7 @@ const LEFT_LINKS = [
 ]
 
 const RIGHT_LINKS = [
-    { label: "PS", to: "/" },
+    { label: "Problem Statement", to: "/problem-statement" },
     { label: "FAQ", to: "/faq" },
     { label: "Contact", to: "/contact" },
 ]
@@ -26,11 +25,8 @@ const MOBILE_LINKS = [...LEFT_LINKS, ...RIGHT_LINKS]
 
 /* A single wooden sign hanging from two chains. Renders a link when `to` is given, otherwise a button. */
 function HangingSign({ to, index, children, square = false, onClick, label, expanded }) {
-    const reduceMotion = useReducedMotion()
     const Tag = to ? MotionLink : motion.button
-    const tagProps = to
-        ? { to }
-        : { type: "button", onClick, "aria-label": label, "aria-expanded": expanded }
+    const tagProps = to ? { to } : { type: "button", onClick, "aria-label": label, "aria-expanded": expanded }
 
     return (
         <motion.div
@@ -47,84 +43,63 @@ function HangingSign({ to, index, children, square = false, onClick, label, expa
             <Tag
                 {...tagProps}
                 className="group block cursor-pointer"
-                style={{ transformOrigin: "50% 0%" }}
-                whileHover={{ rotate: index % 2 ? -6 : 6 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.94 }}
-                transition={{ type: "spring", stiffness: 220, damping: 7 }}
+                transition={{ type: "spring", stiffness: 600, damping: 14 }}
             >
-                {/* idle sway, on its own element so it never fights the hover rotate */}
-                <motion.div
-                    style={{ transformOrigin: "50% 0%" }}
-                    initial={{ rotate: -1.8 }}
-                    animate={reduceMotion ? undefined : { rotate: 1.8 }}
-                    transition={{
-                        duration: 2.5,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "mirror",
-                        delay: index * -0.9,
-                    }}
-                >
-                    <div
-                        className={`relative aspect-[1.406] ${
-                            square
-                                ? "w-[3.5rem] sm:w-[4.5rem]"
-                                : "w-[clamp(4.5rem,11vw,9rem)]"
+                <div
+                    className={`relative aspect-[1.406] transition-[filter] duration-150 sm:group-hover:brightness-125 sm:group-hover:drop-shadow-[0_6px_0_rgba(0,0,0,0.35)] ${square ? "w-[5rem] sm:w-[4.5rem]" : "w-[clamp(4.5rem,11vw,9rem)]"
                         }`}
-                    >
-                        <img
-                            src={SIGN_IMAGES[index % SIGN_IMAGES.length]}
-                            alt=""
-                            aria-hidden="true"
-                            className="absolute inset-0 h-full w-full object-fill"
-                        />
-                        <img
-                            src={activeRopeSign}
-                            alt=""
-                            aria-hidden="true"
-                            className="absolute inset-0 h-full w-full object-fill opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
-                        />
-                        <span
-                            className={`absolute inset-x-[8%] top-[61%] bottom-[8%] flex items-center justify-center whitespace-nowrap font-['Press_Start_2P',monospace] text-[7px] uppercase leading-none tracking-[0.5px] text-[#2a1808] [text-shadow:1px_1px_0_rgba(255,255,255,0.3)] transition-colors duration-150 group-hover:text-white sm:text-[9px] ${
-                                square ? "text-base sm:text-xl" : ""
+                >
+                    <img
+                        src={SIGN_IMAGES[index % SIGN_IMAGES.length]}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-fill"
+                    />
+                    {/* Changed whitespace-nowrap to text-center, and leading-none to leading-tight */}
+                    <span
+                        className={`absolute inset-x-[8%] flex items-center justify-center text-center font-['Press_Start_2P',monospace] text-[7px] uppercase leading-tight tracking-[0.5px] text-black [text-shadow:1px_1px_0_rgba(255,255,255,0.3)] sm:text-[10px] ${square
+                                ? "top-[58%] bottom-[6%]"
+                                : "top-[61%] bottom-[8%] sm:group-hover:animate-[sign-bob_0.5s_ease-in-out_infinite]"
                             }`}
-                        >
-                            {children}
-                        </span>
-                    </div>
-                </motion.div>
+                    >
+                        {children}
+                    </span>
+                </div>
             </Tag>
         </motion.div>
     )
 }
+
 
 /* Small pixel grass block used as the centre "logo" sign */
 function GrassBlock() {
     return (
         <span
             aria-label="Home"
-            className="block h-6 w-6 border-[3px] border-[#2a1808] bg-[#7b5230] [image-rendering:pixelated] [background-image:linear-gradient(#63b23b_0_34%,#3f7d24_34%_42%,transparent_42%),repeating-linear-gradient(90deg,rgba(0,0,0,0.15)_0_4px,transparent_4px_8px)] sm:h-[34px] sm:w-[34px]"
+            className="block h-5 w-5 shrink-0 border-[3px] border-[#2a1808] bg-[#7b5230] [image-rendering:pixelated] [background-image:linear-gradient(#63b23b_0_34%,#3f7d24_34%_42%,transparent_42%),repeating-linear-gradient(90deg,rgba(0,0,0,0.15)_0_4px,transparent_4px_8px)] sm:h-[34px] sm:w-[34px]"
         />
     )
 }
 
-/* Three chunky pixel bars that morph into an X when the menu is open */
+/* Three chunky pixel bars that morph into an X when the menu is open (16px tall so it fits the plank) */
 function BurgerIcon({ open }) {
     return (
-        <span className="relative block h-6 w-6">
+        <span className="relative block h-4 w-5 shrink-0">
             <motion.span
-                className="absolute left-0 top-[2px] block h-1 w-6 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)] transition-colors duration-150 group-hover:bg-white"
-                animate={open ? { y: 8, rotate: 45 } : { y: 0, rotate: 0 }}
+                className="absolute left-0 top-0 block h-1 w-5 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)]"
+                animate={open ? { y: 6, rotate: 45 } : { y: 0, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
             />
             <motion.span
-                className="absolute left-0 top-[10px] block h-1 w-6 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)] transition-colors duration-150 group-hover:bg-white"
+                className="absolute left-0 top-[6px] block h-1 w-5 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)]"
                 animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
                 transition={{ duration: 0.15 }}
             />
             <motion.span
-                className="absolute left-0 top-[18px] block h-1 w-6 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)] transition-colors duration-150 group-hover:bg-white"
-                animate={open ? { y: -8, rotate: -45 } : { y: 0, rotate: 0 }}
+                className="absolute left-0 top-[12px] block h-1 w-5 bg-[#2a1808] shadow-[inset_1px_1px_0_rgba(255,255,255,0.3)]"
+                animate={open ? { y: -6, rotate: -45 } : { y: 0, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
             />
         </span>
@@ -144,6 +119,9 @@ export default function Navbar() {
 
     return (
         <>
+            {/* label bob keyframes used by the desktop hover effect */}
+            <style>{`@keyframes sign-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-2px) } }`}</style>
+
             {/* desktop / tablet nav */}
             <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden items-start justify-center gap-1 sm:flex sm:gap-2 lg:gap-6">
                 {LEFT_LINKS.map((l, i) => (
