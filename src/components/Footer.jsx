@@ -1,50 +1,471 @@
+import { useState } from "react";
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaHouse,
+  FaEnvelope,
+  FaCircleQuestion,
+} from "react-icons/fa6";
+
+const BEDROCK_SRC = "/images/footer/bedrock.webp";
+const MAP_SRC = "/images/footer/map.png";
+
 const VENUE = {
   name: "Shri Guru Gobind Singhji Institute of Engineering and Technology",
-  address: "Vishnupuri, Nanded 431-606",
-  mapUrl:
+  address: "Vishnupuri, Nanded 431-606, Maharashtra, India",
+  mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Shri+Guru+Gobind+Singhji+Institute+of+Engineering+and+Technology+Vishnupuri+Nanded",
 };
+
+const SOCIALS = [
+  {
+    label: "INSTAGRAM",
+    href: "https://www.instagram.com/sggs_swag/",
+    aria: "SWAG on Instagram (opens in a new tab)",
+    Icon: FaInstagram,
+  },
+  {
+    label: "LINKEDIN",
+    href: "https://in.linkedin.com/company/swag-developer-s-club",
+    aria: "SWAG on LinkedIn (opens in a new tab)",
+    Icon: FaLinkedinIn,
+  },
+];
+
+const QUICK_LINKS = [
+  { label: "HOME", href: "#home", Icon: FaHouse },
+  { label: "CONTACT", href: "#contact", Icon: FaEnvelope },
+  { label: "FAQ", href: "#faq", Icon: FaCircleQuestion },
+];
 
 const PIXEL_FONT = "font-['Press_Start_2P',monospace]";
 
 const FOCUS_RING =
-  "focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#79C9F2]";
+  "focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#F2C14E]";
 
-const MOB_PATH = "/images/mobs";
-const MAP_IMAGE = "/images/footer/map.png";
+const P = (n) => `calc(var(--p) * ${n})`;
+
+const WOOD_BASE = "#B98B53";
+const WOOD_JOINT = "rgba(70, 42, 16, 0.55)";
+const WOOD_LINE = "rgba(60, 36, 14, 0.62)";
+const WOOD_LIGHT = "rgba(255, 236, 190, 0.34)";
+const WOOD_DARK = "rgba(50, 28, 10, 0.45)";
+
+const WOOD_SPECKLE =
+  "repeating-conic-gradient(rgba(255,255,255,0.07) 0% 25%, rgba(0,0,0,0.06) 0% 50%)";
+
+const joint = (at) =>
+  `linear-gradient(90deg, transparent ${P(at)}, ${WOOD_JOINT} ${P(at)}, ${WOOD_JOINT} ${P(at + 1)}, transparent ${P(at + 1)})`;
+
+const BAND_STYLE = {
+  backgroundColor: WOOD_BASE,
+  backgroundImage: [
+    `linear-gradient(${WOOD_LIGHT}, ${WOOD_LIGHT})`,
+    `linear-gradient(${WOOD_DARK}, ${WOOD_DARK})`,
+    `linear-gradient(180deg, transparent ${P(5)}, ${WOOD_LINE} ${P(5)})`,
+    joint(11),
+    joint(21),
+    joint(15),
+    WOOD_SPECKLE,
+  ].join(", "),
+  backgroundSize: [
+    `100% ${P(1)}`,
+    `100% ${P(1)}`,
+    `100% ${P(6)}`,
+    `${P(30)} ${P(5)}`,
+    `${P(26)} ${P(5)}`,
+    `${P(34)} ${P(5)}`,
+    `${P(2)} ${P(2)}`,
+  ].join(", "),
+  backgroundPosition: [
+    "0 0",
+    "0 100%",
+    "0 0",
+    "0 0",
+    `0 ${P(6)}`,
+    `0 ${P(12)}`,
+    "0 0",
+  ].join(", "),
+  backgroundRepeat: [
+    "no-repeat",
+    "no-repeat",
+    "repeat-y",
+    "repeat-x",
+    "repeat-x",
+    "repeat-x",
+    "repeat",
+  ].join(", "),
+  imageRendering: "pixelated",
+  boxShadow: `0 ${P(1)} 0 rgba(0, 0, 0, 0.5)`,
+};
+
+const TOP_BLOCKS = [
+  [1.5, 4.5],
+  [9, 3.2],
+  [15.5, 5.6],
+  [24, 3.8],
+  [31, 5],
+  [40, 3.4],
+  [47.5, 6],
+  [57, 3.6],
+  [63, 5.2],
+  [72, 3.4],
+  [79.5, 5.8],
+  [88, 3.6],
+  [94, 4.6],
+];
+
+const HANG_BLOCKS = [
+  [3.5, 3.4],
+  [11, 2.8],
+  [19.5, 4.2],
+  [27, 3],
+  [35.5, 3.8],
+  [44, 2.8],
+  [52, 4.4],
+  [60.5, 3],
+  [68, 3.8],
+  [76, 2.8],
+  [83, 4.2],
+  [91, 3.2],
+];
+
+const BLOCK_STYLE = {
+  backgroundColor: WOOD_BASE,
+  backgroundImage: [
+    `linear-gradient(${WOOD_LIGHT}, ${WOOD_LIGHT})`,
+    `linear-gradient(${WOOD_DARK}, ${WOOD_DARK})`,
+    joint(4),
+    WOOD_SPECKLE,
+  ].join(", "),
+  backgroundSize: [
+    `100% ${P(1)}`,
+    `100% ${P(1)}`,
+    `${P(14)} 100%`,
+    `${P(2)} ${P(2)}`,
+  ].join(", "),
+  backgroundPosition: "0 0, 0 100%, 0 0, 0 0",
+  backgroundRepeat: "no-repeat, no-repeat, repeat-x, repeat",
+  imageRendering: "pixelated",
+  minWidth: P(6),
+  height: P(3),
+};
+
+function WoodenSeam() {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative z-10 w-full"
+      style={{ height: P(20) }}
+    >
+      {/* Notched wooden blocks */}
+      {TOP_BLOCKS.map(([left, width]) => (
+        <span
+          key={`top-${left}`}
+          className="absolute top-0"
+          style={{
+            ...BLOCK_STYLE,
+            left: `${left}%`,
+            width: `${width}%`,
+          }}
+        />
+      ))}
+
+      {/* Main wooden fence/plank */}
+      <div
+        className="absolute inset-x-0"
+        style={{
+          ...BAND_STYLE,
+          top: P(3),
+          height: P(17),
+        }}
+      />
+
+      {/* Hanging wooden blocks */}
+      {HANG_BLOCKS.map(([left, width]) => (
+        <span
+          key={`hang-${left}`}
+          className="absolute"
+          style={{
+            ...BLOCK_STYLE,
+            left: `${left}%`,
+            width: `${width}%`,
+            top: P(20),
+            boxShadow: `0 ${P(1)} 0 rgba(0, 0, 0, 0.45)`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const BEDROCK_STYLE = {
+  backgroundColor: "#141414",
+  backgroundImage: `linear-gradient(rgba(8, 8, 8, 0.58), rgba(8, 8, 8, 0.72)), url(${BEDROCK_SRC})`,
+  backgroundRepeat: "repeat",
+  backgroundSize: "auto, 96px 96px",
+  imageRendering: "pixelated",
+};
+
+const PIN_ROWS = [
+  ".DDDD.",
+  "DGGGGD",
+  "DGDDGD",
+  "DGGGGD",
+  ".DGGD.",
+  "..DD..",
+];
+
+const PIN_COLORS = {
+  D: "bg-[#151A17]",
+  G: "bg-[#F2C14E]",
+};
+
+function MapPin() {
+  return (
+    <span aria-hidden="true" className="grid grid-cols-6">
+      {PIN_ROWS.flatMap((row, r) =>
+        [...row].map((cell, c) => (
+          <span
+            key={`${r}-${c}`}
+            className={`h-1 w-1 sm:h-[5px] sm:w-[5px] ${PIN_COLORS[cell] ?? ""}`}
+          />
+        ))
+      )}
+    </span>
+  );
+}
+
+function SectionHeading({ children }) {
+  return (
+    <h3
+      className={`
+        ${PIXEL_FONT}
+        flex items-center gap-2
+        text-[10px] leading-relaxed text-[#F2C14E]
+        [text-shadow:2px_2px_0_#151A17]
+      `}
+    >
+      <span
+        aria-hidden="true"
+        className="inline-block h-2 w-2 shrink-0 bg-[#5E9C45]"
+      />
+      {children}
+    </h3>
+  );
+}
+
+function GrassButton({ href, children }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`
+        ${PIXEL_FONT}
+        inline-block self-start border-4 border-[#151A17]
+        bg-[#5E9C45] px-3 py-2
+        text-[9px] leading-relaxed text-[#151A17]
+        shadow-[inset_2px_2px_0_0_#8CCB6F,inset_-2px_-2px_0_0_#3E7A2C,3px_3px_0_0_#0C100D]
+        transition-[transform,background-color,box-shadow]
+        hover:-translate-y-0.5 hover:bg-[#F2C14E]
+        hover:shadow-[inset_2px_2px_0_0_#F8DE95,inset_-2px_-2px_0_0_#C49A28,3px_3px_0_0_#0C100D]
+        active:translate-y-0.5
+        motion-reduce:transition-none motion-reduce:hover:translate-y-0
+        ${FOCUS_RING}
+      `}
+    >
+      {children}
+    </a>
+  );
+}
 
 function VenueCard() {
+  const [mapFailed, setMapFailed] = useState(false);
+
   return (
-    <section
-      aria-labelledby="footer-venue-heading"
-      className="flex w-full flex-col items-start justify-center"
-    >
-      <h3
-        id="footer-venue-heading"
-        className={`${PIXEL_FONT} mb-2 text-xs leading-[1.8] text-[#F2C14E] [text-shadow:2px_2px_0_#151A17] sm:text-sm`}
-      >
-        VENUE LOCATION
-      </h3>
+    <div className="flex flex-col gap-2 sm:gap-3">
+      <SectionHeading>FIND US</SectionHeading>
 
-      <p className="max-w-2xl break-words text-sm font-semibold leading-6 text-white [text-shadow:1px_1px_2px_#151A17] sm:text-base">
-        {VENUE.name}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
+        {/* Minecraft map */}
+        <div
+          className="
+            relative w-full max-w-[9rem] shrink-0
+            border-4 border-[#151A17] bg-[#0C100D]
+            shadow-[3px_3px_0_0_#0C100D,0_0_0_2px_#5A3B1E]
+            sm:max-w-none sm:w-40 md:w-44
+          "
+        >
+          {mapFailed ? (
+            <div
+              role="img"
+              aria-label="Minecraft map of the venue; image not available"
+              className={`
+                ${PIXEL_FONT}
+                flex aspect-square items-center justify-center p-2
+                text-center text-[8px] leading-relaxed text-[#C5C9BE]
+              `}
+            >
+              MAP IMAGE NOT FOUND
+            </div>
+          ) : (
+            <img
+              src={MAP_SRC}
+              alt="Minecraft-style map showing the SGGSIE&T campus in Nanded"
+              loading="lazy"
+              draggable="false"
+              onError={() => setMapFailed(true)}
+              className="block h-auto w-full select-none [image-rendering:pixelated]"
+            />
+          )}
+
+          <a
+            href={VENUE.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open the venue location in Google Maps (opens in a new tab)"
+            title="Open in Google Maps"
+            className={`
+              absolute left-[58%] top-[44%]
+              -translate-x-1/2 -translate-y-full
+              transition-transform hover:-translate-y-[130%]
+              motion-reduce:transition-none motion-reduce:hover:-translate-y-full
+              ${FOCUS_RING}
+            `}
+          >
+            <MapPin />
+          </a>
+        </div>
+
+        {/* Venue details */}
+        <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-3">
+          <div className="flex flex-col gap-2">
+            <p
+              className={`
+                ${PIXEL_FONT}
+                break-words text-[9px] leading-[1.9] text-[#F5F2E8]
+              `}
+            >
+              {VENUE.name}
+            </p>
+
+            <address
+              className={`
+                ${PIXEL_FONT}
+                break-words text-[8px] not-italic leading-[2] text-[#C5C9BE]
+              `}
+            >
+              {VENUE.address}
+            </address>
+          </div>
+
+          <GrassButton href={VENUE.mapsUrl}>OPEN MAPS</GrassButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <div className="flex flex-col gap-2 sm:gap-3">
+      <SectionHeading>CONNECT WITH US</SectionHeading>
+
+      <p
+        className={`
+          ${PIXEL_FONT}
+          max-w-xs text-[8px] leading-[2] text-[#C5C9BE]
+        `}
+      >
+        Follow SWAG for updates, projects, and community news.
       </p>
 
-      <p className="mt-1 text-sm leading-6 text-[#F5F2E8] [text-shadow:1px_1px_2px_#151A17] sm:text-base">
-        {VENUE.address}
-      </p>
+      <ul className="flex flex-wrap gap-x-6 gap-y-3">
+        {SOCIALS.map(({ label, href, aria, Icon }) => (
+          <li key={label}>
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={aria}
+              className={`group flex flex-col items-center gap-2 ${FOCUS_RING}`}
+            >
+              <span
+                className="
+                  flex h-11 w-11 items-center justify-center
+                  border-4 border-[#151A17] bg-[#242B25]
+                  text-[#F5F2E8]
+                  shadow-[inset_2px_2px_0_0_#3A443B,inset_-2px_-2px_0_0_#0C100D,3px_3px_0_0_#0C100D]
+                  transition-[transform,border-color,color,box-shadow]
+                  group-hover:-translate-y-1
+                  group-hover:border-[#5E9C45] group-hover:text-[#F2C14E]
+                  group-hover:shadow-[inset_2px_2px_0_0_#3A443B,inset_-2px_-2px_0_0_#0C100D,4px_5px_0_0_#0C100D]
+                  group-focus-visible:-translate-y-1
+                  motion-reduce:transition-none
+                  motion-reduce:group-hover:translate-y-0
+                "
+              >
+                <Icon aria-hidden="true" className="h-5 w-5" />
+              </span>
 
-      <a
-        href={VENUE.mapUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open SGGS Institute of Engineering and Technology in Google Maps (opens in a new tab)"
-        className={`${PIXEL_FONT} ${FOCUS_RING} mt-3 inline-flex max-w-full items-center gap-2 border-[3px] border-[#263D2A] bg-[#5E9C45] px-3 py-2.5 text-[7px] leading-[2] text-[#F5F2E8] shadow-[3px_3px_0_0_#151A17] transition-colors hover:bg-[#F2C14E] hover:text-[#151A17] motion-reduce:transition-none sm:px-4 sm:text-[8px]`}
-      >
-        OPEN IN GOOGLE MAPS
-        <span aria-hidden="true">↗</span>
-      </a>
-    </section>
+              <span
+                className={`
+                  ${PIXEL_FONT}
+                  text-[7px] leading-none text-[#C5C9BE]
+                  transition-colors group-hover:text-[#F2C14E]
+                `}
+              >
+                {label}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function QuickLinks() {
+  return (
+    <nav aria-label="Footer quick links" className="flex flex-col gap-3">
+      <SectionHeading>QUICK LINKS</SectionHeading>
+
+      <ul className="flex flex-col gap-2 sm:gap-2.5">
+        {QUICK_LINKS.map(({ label, href, Icon }) => (
+          <li key={label}>
+            <a
+              href={href}
+              className={`
+                group inline-flex items-center gap-3
+                ${PIXEL_FONT}
+                text-[9px] leading-none text-[#F5F2E8]
+                transition-colors hover:text-[#F2C14E]
+                motion-reduce:transition-none
+                ${FOCUS_RING}
+              `}
+            >
+              <span
+                className="
+                  flex h-6 w-6 items-center justify-center
+                  border-2 border-[#151A17] bg-[#242B25] text-[#A8E063]
+                  shadow-[inset_1px_1px_0_0_#3A443B,2px_2px_0_0_#0C100D]
+                  transition-[transform,border-color,color]
+                  group-hover:-translate-y-0.5
+                  group-hover:border-[#F2C14E] group-hover:text-[#F2C14E]
+                  motion-reduce:transition-none
+                  motion-reduce:group-hover:translate-y-0
+                "
+              >
+                <Icon aria-hidden="true" className="h-3 w-3" />
+              </span>
+
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 
@@ -52,112 +473,89 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative isolate w-full overflow-hidden bg-[#151A17]">
-      {/* Bedrock background */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-20 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('/images/footer/bedrock-footer-background.webp')",
-        }}
-      />
+    <footer
+      aria-label="Site footer"
+      className="relative w-full [--p:3px] sm:[--p:4px]"
+      style={{ background: "transparent", marginTop: P(-3) }}
+    >
+      <WoodenSeam />
 
-      {/* Dark overlay for readable text */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[#151A17]/35"
-      />
-
-      {/* Main footer content */}
-      <div className="mx-auto max-w-[1400px] px-5 pb-3 pt-3 sm:px-8 sm:pb-4 sm:pt-4">
-        {/* Community heading */}
-        {/* Community heading — wider and larger without extra padding */}
-<div className="mx-auto w-full max-w-[1400px] text-center">
-  <img
-    src={`${MOB_PATH}/Ender_Dragon.gif`}
-    alt=""
-    aria-hidden="true"
-    className="mx-auto mb-1 h-12 w-16 object-contain sm:h-14 sm:w-20 md:h-16 md:w-24"
-  />
-
-  <p
-    className={`${PIXEL_FONT} mb-1 text-[8px] leading-tight text-[#A8E063] [text-shadow:1px_1px_2px_#151A17] sm:text-[9px]`}
-  >
-    BUILD YOUR NEXT ADVENTURE
-  </p>
-
-  <h2
-    className={`${PIXEL_FONT} text-base leading-[1.5] text-[#FFD966] [text-shadow:2px_2px_0_#151A17] sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl`}
-  >
-    JOIN THE COMMUNITY
-  </h2>
-
-  <p
-    className={`${PIXEL_FONT} mx-auto mt-1 w-full max-w-5xl text-[8px] leading-tight text-white [text-shadow:1px_1px_2px_#151A17] sm:text-[9px] md:text-[10px]`}
-  >
-    BUILD. COLLABORATE. CREATE SOMETHING LEGENDARY.
-  </p>
-</div>
-
-        {/* Map, venue, and walking Iron Golem */}
-        <div className="mx-auto mt-3 grid max-w-[1350px] grid-cols-1 items-center gap-4 sm:mt-4 sm:gap-5 md:grid-cols-[250px_minmax(0,1fr)] md:gap-7 lg:grid-cols-[280px_minmax(0,1fr)_220px] lg:gap-8 xl:grid-cols-[310px_minmax(0,1fr)_260px] xl:gap-10">
-          {/* Minecraft map */}
-          <div className="relative mx-auto w-full max-w-[205px] sm:max-w-[235px] md:max-w-[250px] lg:max-w-[275px] xl:max-w-[300px]">
-            <img
-              src={MAP_IMAGE}
-              alt="Minecraft world map featuring forests, mountains, snowy biomes, and desert terrain"
-              className="block h-auto w-full object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.45)]"
-              loading="lazy"
-            />
-
-            {/* Clickable venue marker */}
-            <a
-              href={VENUE.mapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View SGGS Institute of Engineering and Technology on Google Maps"
-              className={`${FOCUS_RING} group absolute left-[58%] top-[48%] z-10 flex -translate-x-1/2 -translate-y-full flex-col items-center`}
+      {/* Bedrock footer background */}
+      <div style={BEDROCK_STYLE}>
+        <div className="mx-auto flex w-full max-w-6xl flex-col px-3 pb-3 pt-6 sm:px-6 sm:pb-4 sm:pt-6 lg:px-8">
+          {/* Community heading */}
+          <div className="flex flex-col items-center gap-1.5 text-center sm:gap-2">
+            <p
+              className={`
+                ${PIXEL_FONT}
+                text-[8px] leading-relaxed tracking-wider text-[#A8E063]
+                [text-shadow:2px_2px_0_#0C100D]
+                sm:text-[10px]
+              `}
             >
-              <div className="relative flex h-8 w-8 items-center justify-center border-[3px] border-[#151A17] bg-[#ee3c3f] shadow-[3px_3px_0_#795438] transition-transform group-hover:-translate-y-1 sm:h-9 sm:w-9">
-                <div className="h-3 w-3 border-2 border-[#151A17] bg-[#C33B32] sm:h-4 sm:w-4" />
-              </div>
+              BUILD YOUR NEXT ADVENTURE
+            </p>
 
-              <div className="-mt-1 h-3 w-3 rotate-45 border-b-[3px] border-r-[3px] border-[#151A17] bg-[#e02841]" />
-            </a>
+            <h2
+              className={`
+                ${PIXEL_FONT}
+                text-base leading-[1.6] text-[#FFD966]
+                [text-shadow:3px_3px_0_#5A3B1E]
+                min-[400px]:text-xl sm:text-2xl md:text-3xl
+              `}
+            >
+              JOIN THE COMMUNITY
+            </h2>
+
+            <p
+              className={`
+                ${PIXEL_FONT}
+                max-w-xl text-[8px] leading-[1.9] text-white
+                [text-shadow:2px_2px_0_#0C100D]
+                sm:text-[10px]
+              `}
+            >
+              BUILD. COLLABORATE. CREATE SOMETHING LEGENDARY.
+            </p>
           </div>
 
-          {/* Venue details */}
-          <div className="min-w-0 py-1 md:py-0">
-            <VenueCard />
+          {/* Footer columns */}
+          <div
+            className="
+              mt-4 grid grid-cols-1 gap-x-8 gap-y-5
+              md:mt-6 md:grid-cols-2 md:gap-y-6
+              lg:grid-cols-[1.4fr_1fr_0.7fr]
+            "
+          >
+            <div className="md:col-span-2 lg:col-span-1">
+              <VenueCard />
+            </div>
+
+            <SocialLinks />
+
+            <QuickLinks />
           </div>
-          
-        </div>
-      </div>
 
-      {/* Copyright integrated into the same footer */}
-      <div className="border-t border-white/15 bg-[#151A17]/90">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-2 px-5 py-2 sm:flex-row sm:px-8 sm:py-3 sm:text-left">
-          <p
-            className={`${PIXEL_FONT} text-[6px] leading-[2] text-[#F5F2E8] sm:text-[7px]`}
+          {/* Copyright */}
+          <div
+            className="
+              mt-4 flex flex-col items-center justify-between gap-2
+              border-t-2 border-white/10 pt-3
+              text-center sm:mt-6 sm:flex-row sm:text-left
+            "
           >
-            © {year} HACKFUSION. ALL RIGHTS RESERVED.
-          </p>
+            <p
+              className={`${PIXEL_FONT} text-[7px] leading-relaxed text-[#C5C9BE] sm:text-[8px]`}
+            >
+              &copy; {year} HACKFUSION. ALL RIGHTS RESERVED.
+            </p>
 
-          {/* Larger frog GIF */}
-          <img
-            src={`${MOB_PATH}/frog.gif`}
-            alt=""
-            aria-hidden="true"
-            className="h-10 w-10 shrink-0 object-contain sm:h-12 sm:w-12"
-            loading="lazy"
-          />
-
-          <p
-            className={`${PIXEL_FONT} text-[6px] leading-[2] text-[#A8E063] sm:text-[7px]`}
-          >
-            MADE WITH BLOCKS
-          </p>
+            <p
+              className={`${PIXEL_FONT} text-[7px] leading-relaxed text-[#A8E063] sm:text-[8px]`}
+            >
+              MADE WITH BLOCKS
+            </p>
+          </div>
         </div>
       </div>
     </footer>
