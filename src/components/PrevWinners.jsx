@@ -21,79 +21,25 @@ const EDITIONS = [
         ...EMPTY_DETAILS,
         position: 1,
         label: "1ST PRIZE",
-        teamName: "1st Winner",
-        image: "/images/winners/hackfusion-3-first.jpg",
+        teamName: "TEAM LUCARIO",
+        image: "/images/winners/hackfusion-3-first.JPG",
       },
       {
         ...EMPTY_DETAILS,
         position: 2,
         label: "2ND PRIZE",
-        teamName: "2nd Winner",
-        image: "/images/winners/hackfusion-3-second.jpg",
+        teamName: "TEAM BULBASAUR",
+        image: "/images/winners/hackfusion-3-second.JPG",
       },
       {
         ...EMPTY_DETAILS,
         position: 3,
         label: "3RD PRIZE",
-        teamName: "3rd Winner",
-        image: "/images/winners/hackfusion-3-third.jpg",
+        teamName: "TEAM MEOWTH",
+        image: "/images/winners/hackfusion-3-third.JPG",
       },
     ],
-  },
-  {
-    id: "hackfusion-2",
-    name: "HackFusion 2",
-    winners: [
-      {
-        ...EMPTY_DETAILS,
-        position: 1,
-        label: "1ST PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-      {
-        ...EMPTY_DETAILS,
-        position: 2,
-        label: "2ND PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-      {
-        ...EMPTY_DETAILS,
-        position: 3,
-        label: "3RD PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-    ],
-  },
-  {
-    id: "hackfusion-1",
-    name: "HackFusion 1",
-    winners: [
-      {
-        ...EMPTY_DETAILS,
-        position: 1,
-        label: "1ST PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-      {
-        ...EMPTY_DETAILS,
-        position: 2,
-        label: "2ND PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-      {
-        ...EMPTY_DETAILS,
-        position: 3,
-        label: "3RD PRIZE",
-        teamName: "TEAM NAME TBA",
-        image: "",
-      },
-    ],
-  },
+  }
 ];
 
 
@@ -707,41 +653,7 @@ const MORE_INFO_STYLES = {
   `,
 };
 
-function MoreInfoButton({ winner, editionName, variant = "mobile", style }) {
-  const [open, setOpen] = useState(false);
-  const buttonRef = useRef(null);
 
-  const close = () => {
-    setOpen(false);
-    // Give focus back to the button that opened the card
-    buttonRef.current?.focus();
-  };
-
-  return (
-    <>
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-        aria-label={`More info about ${winner.teamName}`}
-        style={style}
-        className={`
-          ${PIXEL_FONT}
-          ${MORE_INFO_STYLES[variant]}
-          ${variant === "stage" && DEBUG_LAYOUT ? DEBUG_CLASS : ""}
-          ${FOCUS_RING}
-        `}
-      >
-        MORE INFO &gt;
-      </button>
-
-      {open && (
-        <InfoCard winner={winner} editionName={editionName} onClose={close} />
-      )}
-    </>
-  );
-}
 
 const DEBUG_CLASS = "outline outline-1 outline-dashed outline-[#ff3b3b]";
 const dbg = DEBUG_LAYOUT ? DEBUG_CLASS : "";
@@ -1136,7 +1048,6 @@ const PODIUM = {
     tilt: { x: -6, y: 0 },
     plate: { x: 51.5, y: 78.6 },
     button: { x: 51.5, y: 85.4 },
-    placeholder: "TO BE ANNOUNCED",
     win: {
       x: 23,
       y: 24,
@@ -1159,10 +1070,10 @@ const PODIUM = {
       box("obsidian", 81, 18, 13, 58, 30, -12),
       box("obsidian", 6, 9, 88, 11, 30, -10),
 
-      box("copper", 18, 19, 5, 55, 26, -14),
-      box("copper", 77, 19, 5, 55, 26, -14),
-      box("copper", 18, 19, 64, 5, 26, -14),
-      box("copper", 18, 69, 64, 5, 26, -14),
+box("gold", 18, 19, 5, 55, 26, -14),
+box("gold", 77, 19, 5, 55, 26, -14),
+box("gold", 18, 19, 64, 5, 26, -14),
+box("gold", 18, 69, 64, 5, 26, -14),
 
       box("gold", 2, 9, 15, 13, 34, -4),
       box("gold", 83, 9, 15, 13, 34, -4),
@@ -1327,7 +1238,34 @@ const WOOD_STYLE = {
   border: "0.25cqw solid #2B1B0C",
   boxShadow: "inset 0.25cqw 0.25cqw 0 #A98350, inset -0.25cqw -0.25cqw 0 #5A3B1E",
 };
+/* Enchanted obsidian name plate: rank-coloured rim + glowing gems */
+const PLATE_RANK = {
+  1: { rim: "#F2C14E", rimDark: "#B8821C", text: "#FFF3B0", glow: "rgba(242,193,78,0.55)" },
+  2: { rim: "#B58CE8", rimDark: "#5B2C99", text: "#F1E4FF", glow: "rgba(170,100,255,0.55)" },
+  3: { rim: "#5E9C45", rimDark: "#2F5224", text: "#E6FFD8", glow: "rgba(80,255,130,0.45)" },
+};
 
+const plateStyle = (r) => ({
+  backgroundColor: "#171021",
+  backgroundImage: [
+    "repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 0.35cqw, transparent 0.35cqw 0.7cqw)",
+    "repeating-linear-gradient(180deg, rgba(255,255,255,0.035) 0 0.35cqw, transparent 0.35cqw 0.7cqw)",
+    "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.3))",
+  ].join(", "),
+  border: `0.3cqw solid ${r.rim}`,
+  boxShadow: `inset 0 0 0 0.25cqw #0B0713, inset 0 0.3cqw 0 0.25cqw rgba(255,255,255,0.08), 0 0.45cqw 0 ${r.rimDark}, 0 0.45cqw 0 0.3cqw #0C100D, 0 0 1.6cqw ${r.glow}`,
+});
+
+const gem = (r, side) => (
+  <span
+    aria-hidden="true"
+    className={`absolute top-1/2 h-[0.7cqw] w-[0.7cqw] -translate-y-1/2 rotate-45 ${side}`}
+    style={{
+      background: r.rim,
+      boxShadow: `inset 0.12cqw 0.12cqw 0 rgba(255,255,255,0.7), inset -0.12cqw -0.12cqw 0 ${r.rimDark}, 0 0 0.8cqw ${r.glow}`,
+    }}
+  />
+);
 function StageWinner({ winner, editionName }) {
   const P = PODIUM[winner.position];
 
@@ -1335,70 +1273,31 @@ function StageWinner({ winner, editionName }) {
     <li>
       <Podium winner={winner} editionName={editionName} />
 
-      {/* Team name on a wooden plate */}
-      <h4
-        className={`
-          ${PIXEL_FONT}
-          absolute flex w-[12.6cqw] -translate-x-1/2 -translate-y-1/2
-          items-center justify-center overflow-hidden break-words
-          px-[0.5cqw] py-[0.6cqw]
-          text-center text-[clamp(6px,0.78cqw,13px)] leading-snug
-          text-[#F5F2E8]
-          [text-shadow:1px_1px_0_#2B1B0C]
-          max-h-[3.6cqw]
-          ${dbg}
-        `}
-        style={{ ...at(P.plate.x, P.plate.y), ...WOOD_STYLE }}
-      >
-        {winner.teamName}
-      </h4>
-
-      <MoreInfoButton
-        winner={winner}
-        editionName={editionName}
-        variant="stage"
-        style={at(P.button.x, P.button.y)}
-      />
+<h4
+  className={`
+    ${PIXEL_FONT}
+    absolute flex h-[3.1cqw] w-[13.4cqw] -translate-x-1/2 -translate-y-1/2
+    items-center justify-center overflow-hidden break-words
+    px-[1.3cqw] py-[0.3cqw]
+    text-center text-[clamp(6px,0.66cqw,11px)]
+    ${dbg}
+  `}
+  style={{
+    ...at(P.plate.x, P.plate.y),
+    ...plateStyle(PLATE_RANK[winner.position]),
+    color: PLATE_RANK[winner.position].text,
+    textShadow: `0.15cqw 0.15cqw 0 ${PLATE_RANK[winner.position].rimDark}`,
+  }}
+>
+  {gem(PLATE_RANK[winner.position], "left-[0.7cqw]")}
+  {winner.teamName}
+  {gem(PLATE_RANK[winner.position], "right-[0.7cqw]")}
+</h4>
     </li>
   );
 }
 
-/* Small pixel pickaxe used beside the title */
-const PICK_ROWS = [
-  "..SSSSS..",
-  ".S.....S.",
-  "S...B...S",
-  "....B....",
-  "....B....",
-  "....B....",
-  "....B....",
-  "....B....",
-  "....B....",
-];
-
 const PICK_COLORS = { S: "bg-[#A8A8A8]", B: "bg-[#795438]" };
-
-function Pickaxe({ x, y, flip }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={`
-        pointer-events-none absolute -translate-x-1/2 -translate-y-1/2
-        ${flip ? "rotate-[35deg] -scale-x-100" : "-rotate-[35deg]"}
-      `}
-      style={at(x, y)}
-    >
-      <PixelGrid
-        rows={PICK_ROWS}
-        colors={PICK_COLORS}
-        cellClass="h-[0.5cqw] w-[0.5cqw]"
-      />
-    </div>
-  );
-}
-
-/* Edition switcher buttons at the bottom of the scene */
-const EDITION_BUTTON_X = { 1: 45.9, 2: 57.2 };
 
 function StageEditionButton({ label, x, active, onClick }) {
   return (
@@ -1430,74 +1329,155 @@ function StageEditionButton({ label, x, active, onClick }) {
   );
 }
 
+/* Per-rank "material" used by the mobile frames */
 const MOBILE_TONE = {
   1: {
-    frame:
-      "border-[#F2C14E] bg-[#795438] shadow-[4px_4px_0_0_#151A17,0_0_16px_3px_rgba(242,193,78,0.4)]",
-    badge: "border-[#795438] bg-[#F2C14E] text-[#151A17]",
+    fill: "#F2C14E", light: "#FFE58A", dark: "#B8821C", rim: "#5A3B0F",
+    stud: "#B5251C", glow: "rgba(242,193,78,0.45)", base: "#B8821C",
+    badge: "bg-[#F2C14E] text-[#151A17]", mark: "#FFE58A",
   },
   2: {
-    frame: "border-[#B58CE8] bg-[#4B2C7A] shadow-[4px_4px_0_0_#151A17]",
-    badge: "border-[#4B2C7A] bg-[#B58CE8] text-[#151A17]",
+    fill: "#8A4FD0", light: "#B98BF0", dark: "#5B2C99", rim: "#2A1252",
+    stud: "#79C9F2", glow: "rgba(150,80,255,0.4)", base: "#5B2C99",
+    badge: "bg-[#B58CE8] text-[#151A17]", mark: "#D8B8FF",
   },
   3: {
-    frame: "border-[#5E9C45] bg-[#263D2A] shadow-[4px_4px_0_0_#151A17]",
-    badge: "border-[#263D2A] bg-[#5E9C45] text-[#151A17]",
+    fill: "#5E9C45", light: "#8FCB6E", dark: "#2F5224", rim: "#14260F",
+    stud: "#C8693A", glow: "rgba(94,156,69,0.4)", base: "#2F5224",
+    badge: "bg-[#5E9C45] text-[#151A17]", mark: "#A5EA7E",
   },
 };
 
+const PX_TEXTURE =
+  "repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 4px, transparent 4px 8px), repeating-linear-gradient(0deg, rgba(255,255,255,0.08) 0 4px, transparent 4px 8px)";
+
+const CHAIN_BG =
+  "repeating-linear-gradient(180deg, #A3A3A3 0 4px, #3C3C3C 4px 6px, transparent 6px 9px)";
+
 function MobileWinner({ winner, editionName }) {
-  const tone = MOBILE_TONE[winner.position];
+  const t = MOBILE_TONE[winner.position];
   const alt = `${winner.teamName} - ${winner.label} winner, ${editionName}`;
 
-  return (
-    <li className="flex w-full max-w-[18rem] flex-col items-center gap-3">
-      <span
-        className={`
-          ${PIXEL_FONT}
-          border-4 px-3 py-2
-          text-[9px] leading-relaxed
-          shadow-[3px_3px_0_0_#151A17]
-          ${tone.badge}
-        `}
-      >
-        {winner.label}
-      </span>
+  const stud = (pos) => (
+    <span
+      aria-hidden="true"
+      className={`absolute h-3 w-3 border-2 border-[#151A17] ${pos}`}
+      style={{
+        background: t.stud,
+        boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.5)",
+      }}
+    />
+  );
 
-      <div className={`aspect-square w-full border-4 p-2 ${tone.frame}`}>
-        <div className="h-full w-full overflow-hidden border-4 border-[#151A17] bg-[#242B25]">
-          <WinnerImage src={winner.image} alt={alt} />
+  return (
+    <li className="flex w-full max-w-[12.5rem] flex-col items-center">
+      {/* Prize badge hanging from two chains */}
+      <div className="relative flex w-full justify-center">
+        <span
+          aria-hidden="true"
+          className="absolute left-[22%] top-full z-0 h-3 w-[6px]"
+          style={{ backgroundImage: CHAIN_BG }}
+        />
+        <span
+          aria-hidden="true"
+          className="absolute right-[22%] top-full z-0 h-3 w-[6px]"
+          style={{ backgroundImage: CHAIN_BG }}
+        />
+        <span
+          className={`
+            ${PIXEL_FONT}
+            relative z-10 border-4 border-[#151A17] px-3 py-1.5
+            text-[8px] leading-relaxed
+            shadow-[inset_2px_2px_0_0_rgba(255,255,255,0.55),inset_-2px_-2px_0_0_rgba(0,0,0,0.3),3px_3px_0_0_#151A17]
+            ${t.badge}
+          `}
+        >
+          {winner.label}
+        </span>
+      </div>
+
+      {/* Block-style picture frame */}
+      <div
+        className="relative mt-3 aspect-square w-full border-4 border-[#151A17] p-[10px]"
+        style={{
+          backgroundColor: t.fill,
+          backgroundImage: PX_TEXTURE,
+          boxShadow: `inset 4px 4px 0 0 ${t.light}, inset -4px -4px 0 0 ${t.dark}, 4px 4px 0 0 #0C100D, 0 0 18px 2px ${t.glow}`,
+        }}
+      >
+        {stud("left-[2px] top-[2px]")}
+        {stud("right-[2px] top-[2px]")}
+        {stud("bottom-[2px] left-[2px]")}
+        {stud("bottom-[2px] right-[2px]")}
+
+        {/* Recessed picture */}
+        <div
+          className="relative h-full w-full overflow-hidden border-4"
+          style={{
+            borderColor: t.rim,
+            backgroundColor: "#12161A",
+            boxShadow: `0 0 0 2px ${t.dark}`,
+          }}
+        >
+          <WinnerImage
+            src={winner.image}
+            alt={alt}
+            cellClass="h-1 w-1"
+            textClass="text-[7px]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              boxShadow: `inset 0 0 14px ${t.glow}, inset 3px 3px 0 rgba(0,0,0,0.55), inset -3px -3px 0 rgba(255,255,255,0.08)`,
+            }}
+          />
         </div>
       </div>
 
-      <h4
-        className={`
-          ${PIXEL_FONT}
-          w-full break-words border-4 border-[#151A17]
-          bg-[#5A3B1E] px-3 py-2
-          text-center text-[10px] leading-relaxed text-[#F5F2E8]
-        `}
+      {/* Wooden sign for the team name, nailed on */}
+      <div
+        className="relative mt-3 w-[92%] border-4 border-[#2B1B0C] px-3 py-2"
+        style={{
+          backgroundColor: "#8B6A3F",
+          backgroundImage:
+            "repeating-linear-gradient(180deg, transparent 0 6px, rgba(0,0,0,0.2) 6px 8px)",
+          boxShadow:
+            "inset 3px 3px 0 #A98350, inset -3px -3px 0 #5A3B1E, 3px 3px 0 #0C100D",
+        }}
       >
-        {winner.teamName}
-      </h4>
+        <span aria-hidden="true" className="absolute left-1 top-1 h-1 w-1 bg-[#2B1B0C]" />
+        <span aria-hidden="true" className="absolute right-1 top-1 h-1 w-1 bg-[#2B1B0C]" />
+        <h4
+          className={`
+            ${PIXEL_FONT}
+            break-words text-center text-[8px] leading-[1.8]
+            text-[#F5F2E8] [text-shadow:1px_1px_0_#2B1B0C]
+          `}
+        >
+          {winner.teamName}
+        </h4>
+      </div>
 
-      <MoreInfoButton
-        winner={winner}
-        editionName={editionName}
-        variant="mobile"
+      {/* Little block pedestal */}
+      <div
+        aria-hidden="true"
+        className="mt-2 h-5 w-[70%] border-[3px] border-[#151A17]"
+        style={{
+          backgroundColor: t.base,
+          backgroundImage: PX_TEXTURE,
+          boxShadow: `inset 0 3px 0 0 ${t.mark}`,
+        }}
       />
     </li>
   );
 }
 
-
 export default function PrevWinners() {
   // HackFusion 3 is the default edition (EDITIONS index 0).
   const [index, setIndex] = useState(0);
   const edition = EDITIONS[index];
-
-  // Clicking the active edition button goes back to HackFusion 3.
-  const select = (i) => setIndex((current) => (current === i ? 0 : i));
+  
 
   const mobileNav = `
     ${PIXEL_FONT}
@@ -1515,199 +1495,203 @@ export default function PrevWinners() {
   `;
 
   return (
-    <section
-      id="previous-winners"
-      aria-label="Winners till now"
-      className="relative isolate w-full overflow-x-clip bg-[#0E1210]"
-    >
-      <p className="sr-only" aria-live="polite">
-        {`Showing winners of ${edition.name}`}
-      </p>
+  <section
+    id="previous-winners"
+    aria-label="Winners of HackFusion 3"
+    className="relative isolate w-full overflow-x-clip bg-[#0E1210]"
+  >
+    <p className="sr-only" aria-live="polite">
+      {`Showing winners of ${edition.name}`}
+    </p>
 
-      {/*DESKTOP STAGE */}
-      <div className="relative hidden w-full [container-type:inline-size] md:block">
-        <img
-          src={BACKGROUND_SRC}
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-          decoding="async"
-          className="block h-auto w-full select-none"
-        />
-        {/* Title with pickaxes */}
-        <Pickaxe x={19.5} y={10.5} />
-        <Pickaxe x={80.5} y={10.5} flip />
+    {/* DESKTOP STAGE */}
+    <div className="relative hidden w-full [container-type:inline-size] md:block">
+      <img
+        src={BACKGROUND_SRC}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        decoding="async"
+        className="block h-auto w-full select-none"
+      />
+    {/* WINNERS heading */}
+<h2
+  className={`
+    ${PIXEL_FONT}
+    absolute left-1/2 top-[16%]
+    -translate-x-1/2 -translate-y-1/2
+    whitespace-nowrap text-center
+    text-[clamp(18px,3.5cqw,50px)]
+    leading-none
+    text-[#F2C14E]
+    [text-shadow:3px_3px_0_#795438,5px_5px_0_#151A17]
+  `}
+>
+  WINNERS
+</h2>
 
-       <img
-  src="/images/heading.webp"
-  alt="HackFusion 4 — Winners Till Now"
-  draggable={false}
-  className={`absolute left-1/2 top-[13.5%] w-[50%] -translate-x-1/2 -translate-y-1/2 object-contain ${dbg}`}
-/>
-        {/* Hanging wooden edition sign */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute"
-          style={{
-            ...at(41.5, 24.8),
-            width: "0.6cqw",
-            height: "3.2cqw",
-            backgroundImage:
-              "repeating-linear-gradient(180deg, #A3A3A3 0 0.45cqw, #3C3C3C 0.45cqw 0.72cqw, transparent 0.72cqw 1.05cqw)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute"
-          style={{
-            ...at(59.2, 24.8),
-            width: "0.6cqw",
-            height: "3.2cqw",
-            backgroundImage:
-              "repeating-linear-gradient(180deg, #A3A3A3 0 0.45cqw, #3C3C3C 0.45cqw 0.72cqw, transparent 0.72cqw 1.05cqw)",
-          }}
-        />
+{/* OF subtitle */}
+<p
+  className={`
+    ${PIXEL_FONT}
+    absolute left-1/2 top-[23%]
+    -translate-x-1/2 -translate-y-1/2
+    whitespace-nowrap text-center
+    text-[clamp(18px,3.5cqw,50px)]
+    leading-none
+    text-[#F2C14E]
+    [text-shadow:3px_3px_0_#795438,5px_5px_0_#151A17]
+  `}
+>
+  OF
+</p>
 
-        <div
-          aria-live="polite"
+      {/* Hanging wooden sign */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+        style={{
+          ...at(41.5, 24.8),
+          width: "0.6cqw",
+          height: "3.2cqw",
+          backgroundImage:
+            "repeating-linear-gradient(180deg, #A3A3A3 0 0.45cqw, #3C3C3C 0.45cqw 0.72cqw, transparent 0.72cqw 1.05cqw)",
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+        style={{
+          ...at(59.2, 24.8),
+          width: "0.6cqw",
+          height: "3.2cqw",
+          backgroundImage:
+            "repeating-linear-gradient(180deg, #A3A3A3 0 0.45cqw, #3C3C3C 0.45cqw 0.72cqw, transparent 0.72cqw 1.05cqw)",
+        }}
+      />
+
+      {/* HackFusion 3 wooden sign */}
+      <div
+        aria-live="polite"
+        className={`
+          ${PIXEL_FONT}
+          absolute flex -translate-x-1/2 -translate-y-1/2
+          items-center justify-center whitespace-nowrap text-center
+          text-[clamp(7px,1.45cqw,24px)] leading-none
+          text-[#2B1B0C]
+          [text-shadow:0.1cqw_0.1cqw_0_rgba(255,255,255,0.22)]
+          ${dbg}
+        `}
+        style={{
+          ...at(50.4, 31.5),
+          width: "24cqw",
+          height: "4.6cqw",
+          ...WOOD_STYLE,
+        }}
+      >
+        {edition.name.toUpperCase()}
+      </div>
+
+      {/* Minecart rail along the bottom of the podiums */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+        style={{
+          left: "14%",
+          width: "72%",
+          top: "90.6%",
+          height: "1.1cqw",
+          opacity: 0.85,
+          backgroundImage:
+            "linear-gradient(#8A8A8A, #8A8A8A), linear-gradient(#8A8A8A, #8A8A8A), repeating-linear-gradient(90deg, #5A3B1E 0 0.45cqw, transparent 0.45cqw 1.5cqw)",
+          backgroundSize:
+            "100% 0.2cqw, 100% 0.2cqw, 100% 100%",
+          backgroundPosition: "top, bottom, center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+
+      {/* Winners */}
+      <ul className="absolute inset-0 m-0 list-none p-0">
+        {edition.winners.map((winner) => (
+          <StageWinner
+            key={`${edition.id}-${winner.position}`}
+            winner={winner}
+            editionName={edition.name}
+          />
+        ))}
+      </ul>
+    </div>
+
+    {/* MOBILE LAYOUT */}
+    <div className="relative md:hidden">
+      <img
+        src={BACKGROUND_SRC}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        decoding="async"
+        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover opacity-35"
+      />
+
+      <div className="relative z-10 flex flex-col items-center px-4 py-10">
+        {/* WINNERS */}
+        <h2
           className={`
             ${PIXEL_FONT}
-            absolute flex -translate-x-1/2 -translate-y-1/2
-            items-center justify-center whitespace-nowrap text-center
-            text-[clamp(7px,1.45cqw,24px)] leading-none
-            text-[#2B1B0C]
-            [text-shadow:0.1cqw_0.1cqw_0_rgba(255,255,255,0.22)]
-            ${dbg}
+            mx-auto text-center
+            text-2xl leading-relaxed
+            text-[#F2C14E]
+            [text-shadow:3px_3px_0_#795438,5px_5px_0_#151A17]
+            sm:text-3xl
+          `}
+        >
+          WINNERS
+        </h2>
+
+        {/* OF */}
+        <p
+          className={`
+            ${PIXEL_FONT}
+            mt-2 text-center text-sm
+            leading-relaxed text-[#F5F2E8]
+            [text-shadow:2px_2px_0_#151A17]
+          `}
+        >
+          OF
+        </p>
+
+        {/* HackFusion 3 wooden-style sign */}
+        <div
+          className={`
+            ${PIXEL_FONT}
+            mt-4 border-4 border-[#795438]
+            bg-[#A87945] px-6 py-4
+            text-center text-[10px]
+            leading-relaxed text-[#151A17]
+            shadow-[4px_4px_0_0_#151A17]
           `}
           style={{
-            ...at(50.4, 31.5),
-            width: "24cqw",
-            height: "4.6cqw",
-            ...WOOD_STYLE,
+            backgroundImage:
+              "repeating-linear-gradient(0deg, rgba(70,40,15,0.15) 0px, rgba(70,40,15,0.15) 3px, transparent 3px, transparent 9px)",
           }}
         >
           {edition.name.toUpperCase()}
         </div>
 
-        {/* Minecart rail along the bottom of the podiums */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute"
-          style={{
-            left: "14%",
-            width: "72%",
-            top: "90.6%",
-            height: "1.1cqw",
-            opacity: 0.85,
-            backgroundImage:
-              "linear-gradient(#8A8A8A, #8A8A8A), linear-gradient(#8A8A8A, #8A8A8A), repeating-linear-gradient(90deg, #5A3B1E 0 0.45cqw, transparent 0.45cqw 1.5cqw)",
-            backgroundSize: "100% 0.2cqw, 100% 0.2cqw, 100% 100%",
-            backgroundPosition: "top, bottom, center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-
         {/* Winners */}
-        <ul className="absolute inset-0 m-0 list-none p-0">
+        <ul className="mt-10 flex w-full flex-col items-center gap-10">
           {edition.winners.map((winner) => (
-            <StageWinner
+            <MobileWinner
               key={`${edition.id}-${winner.position}`}
               winner={winner}
               editionName={edition.name}
             />
           ))}
         </ul>
-
-        {/* Previous editions */}
-        <StageEditionButton
-          label="HACKFUSION 2"
-          x={EDITION_BUTTON_X[1]}
-          active={index === 1}
-          onClick={() => select(1)}
-        />
-        <StageEditionButton
-          label="HACKFUSION 1"
-          x={EDITION_BUTTON_X[2]}
-          active={index === 2}
-          onClick={() => select(2)}
-        />
       </div>
-
-      {/* MOBILE LAYOUT */}
-      <div className="relative md:hidden">
-        <img
-          src={BACKGROUND_SRC}
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-          decoding="async"
-          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover opacity-35"
-        />
-
-        <div className="relative z-10 flex flex-col items-center px-4 py-10">
-          <p
-            className={`
-              ${PIXEL_FONT}
-              max-w-full break-words text-center
-              text-[10px] leading-relaxed tracking-wider text-[#79C9F2]
-            `}
-          >
-            HACKFUSION 4 / COMMUNITY
-          </p>
-
-         <img
-  src="images/heading.webp"
-  alt="HackFusion 4 — Winners Till Now"
-  className="mx-auto h-auto w-full max-w-5xl object-contain"
-  draggable={false}
-/>
-          <div
-            className={`
-              ${PIXEL_FONT}
-              mt-8 border-4 border-[#795438] bg-[#F2C14E]
-              px-6 py-4 text-center text-[10px]
-              leading-relaxed text-[#151A17]
-              shadow-[4px_4px_0_0_#151A17]
-            `}
-          >
-            {edition.name.toUpperCase()}
-          </div>
-
-          <ul className="mt-10 flex w-full flex-col items-center gap-12">
-            {edition.winners.map((winner) => (
-              <MobileWinner
-                key={`${edition.id}-${winner.position}`}
-                winner={winner}
-                editionName={edition.name}
-              />
-            ))}
-          </ul>
-
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => select(1)}
-              aria-pressed={index === 1}
-              className={`${mobileNav} ${
-                index === 1 ? "border-[#F2C14E] text-[#F2C14E]" : ""
-              }`}
-            >
-              HACKFUSION 2
-            </button>
-
-            <button
-              type="button"
-              onClick={() => select(2)}
-              aria-pressed={index === 2}
-              className={`${mobileNav} ${
-                index === 2 ? "border-[#F2C14E] text-[#F2C14E]" : ""
-              }`}
-            >
-              HACKFUSION 1
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
