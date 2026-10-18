@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react"
 
 // [main, highlight, shadow] per petal, so each block has a little pixel shading
 const PALETTES = [
-    ["#ffb3c6", "#ffd9e3", "#e8809f"],
-    ["#ffc2d1", "#ffe6ed", "#f08fae"],
-    ["#ffa6bd", "#ffd0dc", "#dd7394"],
-    ["#ffd0dc", "#fff0f4", "#f4a0b9"],
+    ["#4f9a3a", "#7bc95e", "#2f6b24"], // fresh green
+    ["#5fae45", "#8fd96f", "#3a7a2a"], // light green
+    ["#3f8a32", "#68b74f", "#256020"], // deep green
+    ["#76b947", "#a5e06f", "#4c8a2c"], // lime
 ]
 
 const STEP = Math.PI / 4 // petals tumble in 45 degree steps for a chunky look
@@ -38,15 +38,17 @@ function drawPetal(ctx, p) {
 }
 
 /**
- * Wrap a page with <CherryBlossom>. Every few seconds a small bunch of
- * blocky petals sweeps from the top right to the bottom left.
+ * Wrap a section with <CherryBlossom> to keep its falling petals scoped to
+ * that section.
  */
 export default function CherryBlossom({ children }) {
+    const containerRef = useRef(null)
     const canvasRef = useRef(null)
 
     useEffect(() => {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
+        const container = containerRef.current
         const canvas = canvasRef.current
         const ctx = canvas.getContext("2d")
 
@@ -56,6 +58,7 @@ export default function CherryBlossom({ children }) {
         let raf = null
         let last = 0
         let timer = null
+        let active = false
 
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -105,6 +108,8 @@ export default function CherryBlossom({ children }) {
         }
 
         const burst = () => {
+            if (!active) return
+
             const count = Math.random() < 0.5 ? 5 : 6
 
             // the whole bunch shares one start point (top right) and one end point (bottom left)
@@ -140,11 +145,30 @@ export default function CherryBlossom({ children }) {
             timer = setTimeout(burst, rand(5000, 9000)) // quiet gap before the next bunch
         }
 
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                if (!active) {
+                    active = true
+                    timer = setTimeout(burst, 1500)
+                }
+                return
+            }
+
+            active = false
+            clearTimeout(timer)
+            timer = null
+            if (raf !== null) cancelAnimationFrame(raf)
+            raf = null
+            petals = []
+            ctx.clearRect(0, 0, w, h)
+        })
+
         resize()
         window.addEventListener("resize", resize)
-        timer = setTimeout(burst, 1500)
+        observer.observe(container)
 
         return () => {
+            observer.disconnect()
             clearTimeout(timer)
             if (raf !== null) cancelAnimationFrame(raf)
             window.removeEventListener("resize", resize)
@@ -152,13 +176,13 @@ export default function CherryBlossom({ children }) {
     }, [])
 
     return (
-        <>
+        <div ref={containerRef}>
             {children}
             <canvas
                 ref={canvasRef}
                 aria-hidden="true"
                 className="pointer-events-none fixed inset-0 z-40"
             />
-        </>
+        </div>
     )
 }
