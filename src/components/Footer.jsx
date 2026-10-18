@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa6";
 
 const BEDROCK_SRC = "/images/footer/bedrock.webp";
-const MAP_SRC = "/images/footer/map.png";
+const MAP_SRC = "/images/footer/map.webp";
 
 const VENUE = {
   name: "Shri Guru Gobind Singhji Institute of Engineering and Technology",
@@ -531,9 +531,11 @@ export default function Footer() {
               <VenueCard />
             </div>
 
-            <SocialLinks />
-
-            <QuickLinks />
+            {/* Mobile: Connect + Quick Links side by side. md+: wrapper disappears */}
+            <div className="grid grid-cols-2 items-start gap-x-4 md:contents">
+              <SocialLinks />
+              <QuickLinks />
+            </div>
           </div>
 
           {/* Copyright */}
