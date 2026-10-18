@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Navbar from "./components/Navbar";
-import Home from "../src/pages/Home";
-import Contact from "./pages/Contact"; // ADDED
-import Faq from "./pages/Faq";
-import CherryBlossom from "../src/components/Cherryblossom";
+const Home = lazy(() => import("./pages/Home"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Faq = lazy(() => import("./pages/Faq"));
 import SplashScreen from "../src/components/SplashScreen"
 import ProblemStatement from "./pages/ProblemStatement";
 // import Schedule from "./pages/Schedule";
@@ -22,7 +21,6 @@ import ProblemStatement from "./pages/ProblemStatement";
 // import Receipt from './pages/Receipt';
 
 import SmoothScroll from "./components/SmoothScroll";
-import Navbar from "./components/Navbar";
 
 
 
@@ -39,6 +37,7 @@ function App() {
         : 
         <>
           <SmoothScroll>
+            <Suspense fallback={null}>
             <Routes>
               <Route
                 path="/"
@@ -60,6 +59,7 @@ function App() {
               <Route path="/receipt" element={<Receipt />} />
               <Route path="/CountDown" element={<CountDown/>}/> */}
             </Routes>
+            </Suspense>
 
           </SmoothScroll>
         </>

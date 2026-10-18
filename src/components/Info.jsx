@@ -162,37 +162,37 @@ export default function Info() {
             <Layer section="s2" image="cavebg" top="0%" height="120%" speed={-.08} z={1} filter="brightness(.62)" className="max-[600px]:!top-0 max-[600px]:!h-[116%]" imgClassName="max-[600px]:object-cover max-[600px]:object-center" />
             {/* Mobile walls: start flush with the section top and fill the section. object-cover +
             object-top keeps the aspect ratio (no stretching) and can never spill into the amethyst section. */}
-            <Layer section="s2" image="walls" top="3vh" speed={.1} z={8} className="max-[600px]:!top-0 max-[600px]:!h-full max-[600px]:[-webkit-mask-image:linear-gradient(to_bottom,#000_30%,transparent_60%)] max-[600px]:[mask-image:linear-gradient(to_bottom,#000_30%,transparent_60%)]" imgClassName="max-[600px]:!h-full max-[600px]:object-cover max-[600px]:object-top">
-              <div className="cave-torch-glow pointer-events-none absolute inset-0 mix-blend-screen animate-[cave-torch-flicker_2.6s_ease-in-out_infinite_alternate]" />
-            </Layer>
-            <Layer section="s2" x={10} width={80} top="14%" speed={0} z={12} className="max-[600px]:!left-[5vw] max-[600px]:!top-[8%] max-[600px]:!w-[90vw]">
-              <h2 id="participate-heading" className="text-center text-[clamp(30px,4vw,60px)] font-bold leading-[1.45] text-[#fff1d4] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#090b12,0_0_20px_#ff9a36] max-[600px]:text-[clamp(18px,4.8vw,23px)]">Why Participate?</h2>
-            </Layer>
-            <Layer section="s2" image="cave-scroll-banner.webp" x={17} width={66} top="27%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[20%] max-[600px]:!w-[96vw]">
-              <div id="participate-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(30px,2.1vw,40px)] font-bold leading-[1] text-[#f3f0ea] [text-shadow:1px_2px_2px_#111] max-[600px]:left-[16%] max-[600px]:right-[16%] max-[600px]:top-[12%] max-[600px]:bottom-[12%] max-[600px]:text-[clamp(12px,3.2vw,15px)]">
-                <p>Hackfusion 4 is where innovation meets opportunity. Turn bold ideas into real-world solutions, collaborate with brilliant minds, and learn from industry experts. Build, experiment, and make your mark. <strong className="text-[#ffd16a]">Think big. Code bold. Be the fusion!</strong></p>
-              </div>
-            </Layer>
-          </section>
-          <section className="world-section relative h-[140vh] w-full overflow-visible [--float-scale:.9] max-[600px]:!h-[68svh] max-[600px]:[--float-scale:.44]" style={{ background: "#10091f" }}>
-            <Layer section="s3" image="geo" top="-6%" height="112%" speed={-.07} z={1} filter="brightness(.95)" className="max-[600px]:!top-[-14%] max-[600px]:!h-[128%]" imgClassName="max-[600px]:object-cover max-[600px]:object-center" />
-            <Layer section="s3" x={5} width={90} top="11%" speed={0} z={32} className="max-[600px]:!left-[5vw] max-[600px]:!top-0 max-[600px]:!w-[90vw]">
-              <h2 id="faq-heading" className="text-center text-[clamp(30px,4vw,60px)] font-bold leading-[1.45] text-[#fff1ff] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#15092b,0_0_22px_#b45cff] max-[600px]:text-[clamp(18px,4.8vw,23px)]">Have Any Questions?</h2>
-            </Layer>
-            <Layer section="s3" image="amethyst-crystal-banner.webp" x={20} width={60} top="24%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[10%] max-[600px]:!w-[96vw]">
-              <div id="faq-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(22px,1.8vw,32px)] font-bold leading-[1.02] text-[#f5edff] [text-shadow:1px_2px_3px_#170923] max-[600px]:left-[14%] max-[600px]:right-[14%] max-[600px]:text-[clamp(15px,3.9vw,18px)]">
-                <p>Wondering how Hackfusion 4 works? Explore our FAQs for quick answers about registration, participation, and submissions. Still have questions? Reach out to us!</p>
-              </div>
-            </Layer>
-            <Link to="/faq" className="pointer-events-auto absolute left-1/2 top-[88%] z-[35] -translate-x-1/2 whitespace-nowrap border-[5px] border-[#281506] bg-[#9d713b] px-12 py-6 font-['Press_Start_2P',monospace] text-[20px] tracking-[.08em] text-[#fff0c2] [background-image:repeating-linear-gradient(0deg,rgba(48,25,7,.18)_0_5px,transparent_5px_13px),linear-gradient(90deg,rgba(255,225,154,.22),transparent_35%_65%,rgba(35,19,7,.2))] [text-shadow:3px_3px_0_#38200d] shadow-[inset_5px_5px_0_rgba(255,220,145,.28),inset_-5px_-5px_0_rgba(44,24,8,.38),0_9px_0_#38200d,0_13px_22px_rgba(0,0,0,.55)] transition-transform hover:-translate-y-1 hover:brightness-110 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#e7c3ff] max-[600px]:top-[65%] max-[600px]:border-[3px] max-[600px]:px-5 max-[600px]:py-3 max-[600px]:text-[12px]" aria-label="Open FAQ page">FAQ</Link>
-            {geodes.map(item => <FloatLayer key={item[0]} item={item} />)}
-            {shards.map((q, i) => <FloatLayer key={`shard-${i}`} item={[`sh${(i * 3 + 1) % 12}`, q[0], q[1], q[2], q[3], 13, "shard", 6 + i % 4, i, .95]} />)}
-            <Layer section="s3" image="gceil" top="-24vw" z={30} filter="brightness(.9)" className="max-[600px]:!top-[-20vh]" />
-            <TeleportEnderman label="amethyst" className="max-[600px]:top-[2%]" />
-          </section>
-        </div>
-        {/* Mobile: soft-light blending on a full-screen fixed layer is very expensive to scroll, so phones use a plain tint. */}
-        <div className="world-grade pointer-events-none fixed inset-0 z-[60] mix-blend-soft-light transition-colors duration-[800ms] max-[600px]:mix-blend-normal max-[600px]:opacity-60" /><div className="pointer-events-none fixed inset-0 z-[60] bg-[radial-gradient(ellipse_at_50%_50%,transparent_55%,rgba(0,0,0,.5)_100%)]" />
+        <Layer section="s2" image="walls" top="3vh" speed={.1} z={8} className="max-[600px]:!top-0 max-[600px]:!h-full max-[600px]:[-webkit-mask-image:linear-gradient(to_bottom,#000_30%,transparent_60%)] max-[600px]:[mask-image:linear-gradient(to_bottom,#000_30%,transparent_60%)]" imgClassName="max-[600px]:!h-full max-[600px]:object-cover max-[600px]:object-top">
+          <div className="cave-torch-glow pointer-events-none absolute inset-0 mix-blend-screen animate-[cave-torch-flicker_2.6s_ease-in-out_infinite_alternate]"/>
+        </Layer>
+        <Layer section="s2" x={10} width={80} top="14%" speed={0} z={12} className="max-[600px]:!left-[5vw] max-[600px]:!top-[8%] max-[600px]:!w-[90vw]">
+          <h2 id="participate-heading" className="text-center text-[clamp(34px,4.4vw,66px)] font-bold leading-[1.45] text-[#fff1d4] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#090b12,0_0_20px_#ff9a36] max-[600px]:text-[clamp(20px,5vw,25px)]">Why Participate?</h2>
+        </Layer>
+        <Layer section="s2" image="cave-scroll-banner.webp" x={17} width={66} top="27%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[20%] max-[600px]:!w-[96vw]">
+          <div id="participate-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(15px,1.25vw,20px)] font-bold leading-[1.8] text-[#f3f0ea] [font-family:'Press_Start_2P',monospace] [text-shadow:1px_2px_2px_#111] max-[600px]:left-[16%] max-[600px]:right-[16%] max-[600px]:top-[12%] max-[600px]:bottom-[12%] max-[600px]:text-[clamp(8px,2.1vw,10px)]">
+            <p>Hackfusion 4 is where innovation meets opportunity. Turn bold ideas into real-world solutions, collaborate with brilliant minds, and learn from industry experts. Build, experiment, and make your mark. <strong className="text-[#ffd16a]">Think big. Code bold. Be the fusion!</strong></p>
+          </div>
+        </Layer>
+      </section>
+      <section className="world-section relative h-[140vh] w-full overflow-visible [--float-scale:.9] max-[600px]:!h-[68svh] max-[600px]:[--float-scale:.44]" style={{background:"#10091f"}}>
+        <Layer section="s3" image="geo" top="-6%" height="112%" speed={-.07} z={1} filter="brightness(.95)" className="max-[600px]:!top-[-14%] max-[600px]:!h-[128%]" imgClassName="max-[600px]:object-cover max-[600px]:object-center"/>
+        <Layer section="s3" x={5} width={90} top="11%" speed={0} z={32} className="max-[600px]:!left-[5vw] max-[600px]:!top-0 max-[600px]:!w-[90vw]">
+          <h2 id="faq-heading" className="text-center text-[clamp(34px,4.4vw,66px)] font-bold leading-[1.45] text-[#fff1ff] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#15092b,0_0_22px_#b45cff] max-[600px]:text-[clamp(20px,5vw,25px)]">Have Any Questions?</h2>
+        </Layer>
+        <Layer section="s3" image="amethyst-crystal-banner.webp" x={20} width={60} top="24%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[10%] max-[600px]:!w-[96vw]">
+          <div id="faq-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(15px,1.25vw,20px)] font-bold leading-[1.8] text-[#f5edff] [font-family:'Press_Start_2P',monospace] [text-shadow:1px_2px_3px_#170923] max-[600px]:left-[14%] max-[600px]:right-[14%] max-[600px]:text-[clamp(8px,2.1vw,10px)]">
+            <p>Wondering how Hackfusion 4 works? Explore our FAQs for quick answers about registration, participation, and submissions. Still have questions? Reach out to us!</p>
+          </div>
+        </Layer>
+        <Link to="/faq" className="pointer-events-auto absolute left-1/2 top-[88%] z-[35] -translate-x-1/2 whitespace-nowrap border-[5px] border-[#281506] bg-[#9d713b] px-12 py-6 font-['Press_Start_2P',monospace] text-[20px] tracking-[.08em] text-[#fff0c2] [background-image:repeating-linear-gradient(0deg,rgba(48,25,7,.18)_0_5px,transparent_5px_13px),linear-gradient(90deg,rgba(255,225,154,.22),transparent_35%_65%,rgba(35,19,7,.2))] [text-shadow:3px_3px_0_#38200d] shadow-[inset_5px_5px_0_rgba(255,220,145,.28),inset_-5px_-5px_0_rgba(44,24,8,.38),0_9px_0_#38200d,0_13px_22px_rgba(0,0,0,.55)] transition-transform hover:-translate-y-1 hover:brightness-110 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#e7c3ff] max-[600px]:top-[65%] max-[600px]:border-[3px] max-[600px]:px-5 max-[600px]:py-3 max-[600px]:text-[12px]" aria-label="Open FAQ page">FAQ</Link>
+        {geodes.map(item=><FloatLayer key={item[0]} item={item}/>)}
+        {shards.map((q,i)=><FloatLayer key={`shard-${i}`} item={[`sh${(i*3+1)%12}`,q[0],q[1],q[2],q[3],13,"shard",6+i%4,i,.95]}/>)}
+        <Layer section="s3" image="gceil" top="-24vw" z={30} filter="brightness(.9)" className="max-[600px]:!top-[-20vh]"/>
+        <TeleportEnderman label="amethyst" className="max-[600px]:top-[2%]"/>
+      </section>
+    </div>
+    {/* Mobile: soft-light blending on a full-screen fixed layer is very expensive to scroll, so phones use a plain tint. */}
+    <div className="world-grade pointer-events-none fixed inset-0 z-[60] mix-blend-soft-light transition-colors duration-[800ms] max-[600px]:mix-blend-normal max-[600px]:opacity-60" /><div className="pointer-events-none fixed inset-0 z-[60] bg-[radial-gradient(ellipse_at_50%_50%,transparent_55%,rgba(0,0,0,.5)_100%)]"/>
 
       </div>;
     </CascadeSection>

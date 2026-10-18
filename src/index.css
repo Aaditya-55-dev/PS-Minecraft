@@ -1000,4 +1000,38 @@ body.modal-open {
   border-radius: 999px;
   background: #c48a4b;
 }
-main
+
+@keyframes vines-drop-in {
+  from {
+    translate: 0 -150px;
+    opacity: 0;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+
+@keyframes lantern-drop-in {
+  from {
+    translate: 0 -220px;
+    opacity: 0;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes lantern-sway {
+  from {
+    transform-origin: 50% 0;
+    rotate: -2deg;
+  }
+  to {
+    transform-origin: 50% 0;
+    rotate: 2deg;
+  }
+}
+
