@@ -1,7 +1,7 @@
 function StructureWrapper({ children }) {
   return (
     <div className="structure-wrapper">
-      <div className="beam-container">
+      <div className="beam-container mt-30">
         <div className="hanging-lantern lantern-left">
           <div className="lantern-chain"></div>
           <div className="lantern-body">
