@@ -46,6 +46,7 @@ function App() {
                   <Home />
                 }
               />
+              <Route path="/home" element={<Home />} />
               <Route path="/contact" element={<Contact />} /> {/* ADDED */}
               <Route path="/faq" element={<Faq />} />
               {/* <Route path="/registration" element={<RegistrationForm/>} />

@@ -117,9 +117,9 @@ export default function ScrollFrames({
             ref={sectionRef}
             className="relative w-full"
             style={{
-                height: holdScreens
-                    ? `calc(${scrollHeight} + ${holdScreens * 100}vh)`
-                    : scrollHeight,
+                // `scrollHeight` is the desired frame-scroll distance. Add the sticky viewport
+                // and any optional hold after the animation so following sections wait.
+                height: `calc(${scrollHeight} + ${(1 + holdScreens) * 100}vh)`,
             }}
         >
             <div className="sticky top-0 h-screen w-full">

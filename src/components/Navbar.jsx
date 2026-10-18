@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { Link } from "react-router-dom"
+import chainSignA from "../assets/pageassets-clean/nav-sign-chain-a.WebP"
+import chainSignB from "../assets/pageassets-clean/nav-sign-chain-b.WebP"
+import activeRopeSign from "../assets/pageassets-clean/nav-sign-rope-active.WebP"
+import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.Webp"
 
 const MotionLink = motion.create(Link)
+const SIGN_IMAGES = [chainSignA, chainSignB]
 
 // change these paths to match your routes
 const LEFT_LINKS = [
@@ -60,19 +65,32 @@ function HangingSign({ to, index, children, square = false, onClick, label, expa
                         delay: index * -0.9,
                     }}
                 >
-                    {/* chains */}
-                    <div className="relative h-8 w-full sm:h-11">
-                        <span className="absolute -top-1 -bottom-0.5 left-[16%] w-1.5 [image-rendering:pixelated] [background-image:repeating-linear-gradient(180deg,#aab0b6_0_4px,#50565c_4px_6px,#747b82_6px_10px,#23272b_10px_12px)] shadow-[inset_2px_0_0_rgba(255,255,255,0.3),inset_-2px_0_0_rgba(0,0,0,0.4)] sm:w-2" />
-                        <span className="absolute -top-1 -bottom-0.5 right-[16%] w-1.5 [image-rendering:pixelated] [background-image:repeating-linear-gradient(180deg,#aab0b6_0_4px,#50565c_4px_6px,#747b82_6px_10px,#23272b_10px_12px)] shadow-[inset_2px_0_0_rgba(255,255,255,0.3),inset_-2px_0_0_rgba(0,0,0,0.4)] sm:w-2" />
-                    </div>
-
-                    {/* wooden plank */}
                     <div
-                        className={`relative whitespace-nowrap border-4 border-[#3b2410] bg-[#a97c46] font-['Press_Start_2P',monospace] text-[8px] uppercase leading-none tracking-[0.5px] text-[#2a1808] [background-image:repeating-linear-gradient(0deg,rgba(0,0,0,0.08)_0_4px,transparent_4px_10px),repeating-linear-gradient(90deg,rgba(255,255,255,0.05)_0_6px,transparent_6px_22px)] [text-shadow:2px_2px_0_rgba(255,255,255,0.2)] shadow-[inset_4px_4px_0_rgba(255,255,255,0.22),inset_-4px_-4px_0_rgba(0,0,0,0.28),0_8px_0_rgba(0,0,0,0.35)] transition-[filter,color,text-shadow] duration-150 ease-in-out before:absolute before:left-[5px] before:top-[5px] before:h-1 before:w-1 before:bg-[#3b2410] before:content-[''] after:absolute after:right-[5px] after:top-[5px] after:h-1 after:w-1 after:bg-[#3b2410] after:content-[''] group-hover:text-white group-hover:brightness-[1.18] group-hover:[text-shadow:2px_2px_0_#3b2410] sm:text-[11px] ${
-                            square ? "p-[7px] sm:p-2.5" : "px-[9px] py-3 sm:px-5 sm:py-4"
+                        className={`relative aspect-[1.406] ${
+                            square
+                                ? "w-[3.5rem] sm:w-[4.5rem]"
+                                : "w-[clamp(4.5rem,11vw,9rem)]"
                         }`}
                     >
-                        {children}
+                        <img
+                            src={SIGN_IMAGES[index % SIGN_IMAGES.length]}
+                            alt=""
+                            aria-hidden="true"
+                            className="absolute inset-0 h-full w-full object-fill"
+                        />
+                        <img
+                            src={activeRopeSign}
+                            alt=""
+                            aria-hidden="true"
+                            className="absolute inset-0 h-full w-full object-fill opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
+                        />
+                        <span
+                            className={`absolute inset-x-[8%] top-[61%] bottom-[8%] flex items-center justify-center whitespace-nowrap font-['Press_Start_2P',monospace] text-[7px] uppercase leading-none tracking-[0.5px] text-[#2a1808] [text-shadow:1px_1px_0_rgba(255,255,255,0.3)] transition-colors duration-150 group-hover:text-white sm:text-[9px] ${
+                                square ? "text-base sm:text-xl" : ""
+                            }`}
+                        >
+                            {children}
+                        </span>
                     </div>
                 </motion.div>
             </Tag>
@@ -127,7 +145,7 @@ export default function Navbar() {
     return (
         <>
             {/* desktop / tablet nav */}
-            <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden items-start justify-center gap-8 sm:flex">
+            <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden items-start justify-center gap-1 sm:flex sm:gap-2 lg:gap-6">
                 {LEFT_LINKS.map((l, i) => (
                     <HangingSign key={l.label} to={l.to} index={i}>
                         {l.label}
@@ -187,33 +205,34 @@ export default function Navbar() {
                             exit={{ opacity: 0, y: -24, scale: 0.92 }}
                             transition={{ type: "spring", stiffness: 220, damping: 16 }}
                         >
-                            {/* chains */}
-                            <div className="relative h-4 w-full">
-                                <span className="absolute -top-1 -bottom-0.5 left-[16%] w-1.5 [image-rendering:pixelated] [background-image:repeating-linear-gradient(180deg,#aab0b6_0_4px,#50565c_4px_6px,#747b82_6px_10px,#23272b_10px_12px)] shadow-[inset_2px_0_0_rgba(255,255,255,0.3),inset_-2px_0_0_rgba(0,0,0,0.4)]" />
-                                <span className="absolute -top-1 -bottom-0.5 right-[16%] w-1.5 [image-rendering:pixelated] [background-image:repeating-linear-gradient(180deg,#aab0b6_0_4px,#50565c_4px_6px,#747b82_6px_10px,#23272b_10px_12px)] shadow-[inset_2px_0_0_rgba(255,255,255,0.3),inset_-2px_0_0_rgba(0,0,0,0.4)]" />
-                            </div>
+                            <div className="relative p-5">
+                                <img
+                                    src={woodPlank}
+                                    alt=""
+                                    aria-hidden="true"
+                                    className="absolute inset-0 h-full w-full object-fill"
+                                />
+                                <div className="relative z-10">
+                                    <p className="mb-3 mt-1 text-center font-['Press_Start_2P',monospace] text-[9px] uppercase leading-none tracking-[0.5px] text-[#2a1808] [text-shadow:2px_2px_0_rgba(255,255,255,0.2)]">
+                                        Menu
+                                    </p>
 
-                            {/* wooden board */}
-                            <div className="relative border-4 border-[#3b2410] bg-[#a97c46] p-3 [background-image:repeating-linear-gradient(0deg,rgba(0,0,0,0.08)_0_4px,transparent_4px_10px),repeating-linear-gradient(90deg,rgba(255,255,255,0.05)_0_6px,transparent_6px_22px)] shadow-[inset_4px_4px_0_rgba(255,255,255,0.22),inset_-4px_-4px_0_rgba(0,0,0,0.28),0_8px_0_rgba(0,0,0,0.35)] before:absolute before:left-[5px] before:top-[5px] before:h-1 before:w-1 before:bg-[#3b2410] before:content-[''] after:absolute after:right-[5px] after:top-[5px] after:h-1 after:w-1 after:bg-[#3b2410] after:content-['']">
-                                <p className="mb-3 mt-1 text-center font-['Press_Start_2P',monospace] text-[9px] uppercase leading-none tracking-[0.5px] text-[#2a1808] [text-shadow:2px_2px_0_rgba(255,255,255,0.2)]">
-                                    Menu
-                                </p>
-
-                                <div className="flex flex-col gap-3">
-                                    {MOBILE_LINKS.map((l, i) => (
-                                        <MotionLink
-                                            key={l.label}
-                                            to={l.to}
-                                            onClick={() => setOpen(false)}
-                                            className="block w-full cursor-pointer border-4 border-black bg-[#7d7d7d] px-4 py-3 text-center font-['Press_Start_2P',monospace] text-[10px] uppercase leading-snug text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] shadow-[inset_4px_4px_0_rgba(255,255,255,0.38),inset_-4px_-4px_0_rgba(0,0,0,0.38),0_4px_0_rgba(0,0,0,0.4)] transition-[filter] duration-150 ease-in-out hover:brightness-[1.2] active:brightness-[1.2]"
-                                            initial={{ opacity: 0, x: 24 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.1 + i * 0.06, duration: 0.3 }}
-                                            whileTap={{ scale: 0.96 }}
-                                        >
-                                            {l.label}
-                                        </MotionLink>
-                                    ))}
+                                    <div className="flex flex-col gap-3">
+                                        {MOBILE_LINKS.map((l, i) => (
+                                            <MotionLink
+                                                key={l.label}
+                                                to={l.to}
+                                                onClick={() => setOpen(false)}
+                                                className="block w-full cursor-pointer border-4 border-black bg-[#7d7d7d] px-4 py-3 text-center font-['Press_Start_2P',monospace] text-[10px] uppercase leading-snug text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] shadow-[inset_4px_4px_0_rgba(255,255,255,0.38),inset_-4px_-4px_0_rgba(0,0,0,0.38),0_4px_0_rgba(0,0,0,0.4)] transition-[filter] duration-150 ease-in-out hover:brightness-[1.2] active:brightness-[1.2]"
+                                                initial={{ opacity: 0, x: 24 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.1 + i * 0.06, duration: 0.3 }}
+                                                whileTap={{ scale: 0.96 }}
+                                            >
+                                                {l.label}
+                                            </MotionLink>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
