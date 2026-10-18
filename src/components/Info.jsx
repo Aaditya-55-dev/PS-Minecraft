@@ -141,10 +141,10 @@ export default function Info() {
         {[["cl0",-3,34,"6vh",-.34,"31s"],["cl1",60,36,"20vh",-.28,"44s"],["cl2",24,28,"40vh",-.2,"37s"],["cl3",68,30,"56vh",-.14,"50s"]].map(([image,x,width,top,speed,duration])=><Layer key={image} section="s1" image={image} x={x} width={width} top={`calc(${top} + 25vh)`} speed={speed} z={image === "cl0" || image === "cl3" ? 8 : 2} className="world-drift" duration={duration} opacity={.92}/>)}
         </div>
         <Layer section="s1" x={7} width={86} top="3%" speed={0} z={12} className="max-[768px]:!left-[4vw] max-[768px]:!top-[3%] max-[768px]:!w-[92vw]">
-          <h2 id="morning-heading" className="text-center text-[clamp(24px,3vw,48px)] font-bold leading-[1.45] text-[#fff5d8] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#160b25,0_0_22px_#140a30] max-[768px]:text-[clamp(18px,4.8vw,23px)]">A Fusion of Ideas, Code, and Excitement!</h2>
+          <h2 id="morning-heading" className="text-center text-[clamp(28px,3.3vw,52px)] font-bold leading-[1.45] text-[#fff5d8] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#160b25,0_0_22px_#140a30] max-[768px]:text-[clamp(20px,5vw,25px)]">A Fusion of Ideas, Code, and Excitement!</h2>
         </Layer>
-        <Layer section="s1" image="morning-parchment-banner.webp" x={27} width={46} top="17%" speed={0} z={7} className="max-[768px]:!left-[8vw] max-[768px]:!top-[25%] max-[768px]:!w-[84vw]">
-          <div id="morning-description" className="absolute left-[18%] right-[18%] top-[7%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(22px,1.8vw,32px)] font-bold leading-[1.02] text-[#3b2615] [text-shadow:0_1px_0_rgba(255,255,220,.55)] max-[768px]:left-[15%] max-[768px]:right-[15%] max-[768px]:text-[clamp(12px,3.2vw,14px)]">
+        <Layer section="s1" image="morning-parchment-banner.webp" x={27} width={46} top="17%" speed={0} z={12} className="max-[768px]:!left-[8vw] max-[768px]:!top-[25%] max-[768px]:!w-[84vw]">
+          <div id="morning-description" className="absolute left-[18%] right-[18%] top-[7%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(15px,1.25vw,20px)] font-bold leading-[1.8] text-[#3b2615] [font-family:'Press_Start_2P',monospace] [text-shadow:0_1px_0_rgba(255,255,220,.55)] max-[768px]:left-[15%] max-[768px]:right-[15%] max-[768px]:text-[clamp(8px,2.1vw,10px)]">
             <p>Join <strong>Hackfusion 4</strong>, a national-level hackathon at <strong>SGGSIE&amp;T Nanded</strong>, where 100+ teams unite to innovate, code, and compete! Experience the fusion of ideas, technology, and excitement while connecting with passionate developers, expert mentors, and industry sponsors.</p>
           </div>
         </Layer>
@@ -166,10 +166,10 @@ export default function Info() {
           <div className="cave-torch-glow pointer-events-none absolute inset-0 mix-blend-screen animate-[cave-torch-flicker_2.6s_ease-in-out_infinite_alternate]"/>
         </Layer>
         <Layer section="s2" x={10} width={80} top="14%" speed={0} z={12} className="max-[600px]:!left-[5vw] max-[600px]:!top-[8%] max-[600px]:!w-[90vw]">
-          <h2 id="participate-heading" className="text-center text-[clamp(30px,4vw,60px)] font-bold leading-[1.45] text-[#fff1d4] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#090b12,0_0_20px_#ff9a36] max-[600px]:text-[clamp(18px,4.8vw,23px)]">Why Participate?</h2>
+          <h2 id="participate-heading" className="text-center text-[clamp(34px,4.4vw,66px)] font-bold leading-[1.45] text-[#fff1d4] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#090b12,0_0_20px_#ff9a36] max-[600px]:text-[clamp(20px,5vw,25px)]">Why Participate?</h2>
         </Layer>
         <Layer section="s2" image="cave-scroll-banner.webp" x={17} width={66} top="27%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[20%] max-[600px]:!w-[96vw]">
-          <div id="participate-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(30px,2.1vw,40px)] font-bold leading-[1] text-[#f3f0ea] [text-shadow:1px_2px_2px_#111] max-[600px]:left-[16%] max-[600px]:right-[16%] max-[600px]:top-[12%] max-[600px]:bottom-[12%] max-[600px]:text-[clamp(12px,3.2vw,15px)]">
+          <div id="participate-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(15px,1.25vw,20px)] font-bold leading-[1.8] text-[#f3f0ea] [font-family:'Press_Start_2P',monospace] [text-shadow:1px_2px_2px_#111] max-[600px]:left-[16%] max-[600px]:right-[16%] max-[600px]:top-[12%] max-[600px]:bottom-[12%] max-[600px]:text-[clamp(8px,2.1vw,10px)]">
             <p>Hackfusion 4 is where innovation meets opportunity. Turn bold ideas into real-world solutions, collaborate with brilliant minds, and learn from industry experts. Build, experiment, and make your mark. <strong className="text-[#ffd16a]">Think big. Code bold. Be the fusion!</strong></p>
           </div>
         </Layer>
@@ -177,10 +177,10 @@ export default function Info() {
       <section className="world-section relative h-[140vh] w-full overflow-visible [--float-scale:.9] max-[600px]:!h-[68svh] max-[600px]:[--float-scale:.44]" style={{background:"#10091f"}}>
         <Layer section="s3" image="geo" top="-6%" height="112%" speed={-.07} z={1} filter="brightness(.95)" className="max-[600px]:!top-[-14%] max-[600px]:!h-[128%]" imgClassName="max-[600px]:object-cover max-[600px]:object-center"/>
         <Layer section="s3" x={5} width={90} top="11%" speed={0} z={32} className="max-[600px]:!left-[5vw] max-[600px]:!top-0 max-[600px]:!w-[90vw]">
-          <h2 id="faq-heading" className="text-center text-[clamp(30px,4vw,60px)] font-bold leading-[1.45] text-[#fff1ff] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#15092b,0_0_22px_#b45cff] max-[600px]:text-[clamp(18px,4.8vw,23px)]">Have Any Questions?</h2>
+          <h2 id="faq-heading" className="text-center text-[clamp(34px,4.4vw,66px)] font-bold leading-[1.45] text-[#fff1ff] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#15092b,0_0_22px_#b45cff] max-[600px]:text-[clamp(20px,5vw,25px)]">Have Any Questions?</h2>
         </Layer>
         <Layer section="s3" image="amethyst-crystal-banner.webp" x={20} width={60} top="24%" speed={0} z={10} className="max-[600px]:!left-[2vw] max-[600px]:!top-[10%] max-[600px]:!w-[96vw]">
-          <div id="faq-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(22px,1.8vw,32px)] font-bold leading-[1.02] text-[#f5edff] [text-shadow:1px_2px_3px_#170923] max-[600px]:left-[14%] max-[600px]:right-[14%] max-[600px]:text-[clamp(15px,3.9vw,18px)]">
+          <div id="faq-description" className="absolute left-[18%] right-[18%] top-[10%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(15px,1.25vw,20px)] font-bold leading-[1.8] text-[#f5edff] [font-family:'Press_Start_2P',monospace] [text-shadow:1px_2px_3px_#170923] max-[600px]:left-[14%] max-[600px]:right-[14%] max-[600px]:text-[clamp(8px,2.1vw,10px)]">
             <p>Wondering how Hackfusion 4 works? Explore our FAQs for quick answers about registration, participation, and submissions. Still have questions? Reach out to us!</p>
           </div>
         </Layer>
