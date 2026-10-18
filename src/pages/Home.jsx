@@ -5,6 +5,7 @@ import PrevWinners from "../components/PrevWinners";
 import Footer from "../components/Footer";
 import CherryBlossom from "../components/Cherryblossom"
 import PrizePool from "../components/PrizePool";
+import BookSection from "../components/BookSection"
 export default function Home() {
     return (
         <div className="overflow-x-clip">
