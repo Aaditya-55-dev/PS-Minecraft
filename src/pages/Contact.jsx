@@ -409,6 +409,7 @@ function Contact() {
 
   return (
     <>
+      <Navbar/>
       {animationStyles}
     <div
       className={cx(
@@ -465,7 +466,7 @@ function Contact() {
             <img
               src={titleImg}
               alt="Contact Us"
-              className={cx("block h-full w-full object-contain", PIXEL)}
+              className={cx("block h-full w-full object-contain md:mt-15", PIXEL)}
             />
           </h1>
           <p
