@@ -13,6 +13,7 @@ export default function Home() {
                 <HeroSection />
             </CherryBlossom>
             <Info />
+            <BookSection />
             <PrevWinners />
             <PrizePool/>
             <Footer />

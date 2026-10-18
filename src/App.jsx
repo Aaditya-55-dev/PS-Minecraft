@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Navbar from "./components/Navbar";
 import Home from "../src/pages/Home";
 import Contact from "./pages/Contact"; // ADDED
+import Faq from "./pages/Faq";
 import CherryBlossom from "../src/components/Cherryblossom";
 import SplashScreen from "../src/components/SplashScreen"
 // import Schedule from "./pages/Schedule";
@@ -20,6 +21,7 @@ import SplashScreen from "../src/components/SplashScreen"
 // import Receipt from './pages/Receipt';
 
 import SmoothScroll from "./components/SmoothScroll";
+import Navbar from "./components/Navbar";
 
 
 
@@ -43,7 +45,9 @@ function App() {
                   <Home />
                 }
               />
+              <Route path="/home" element={<Home />} />
               <Route path="/contact" element={<Contact />} /> {/* ADDED */}
+              <Route path="/faq" element={<Faq />} />
               {/* <Route path="/registration" element={<RegistrationForm/>} />
               <Route path="/login" element={<Login/>} />
               <Route path="/dashboard" element={<Dashboard/>} />

@@ -13,3 +13,22 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
+
+.faq-scrollbar {
+  scrollbar-color: #c48a4b #342116;
+  scrollbar-width: thin;
+}
+
+.faq-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.faq-scrollbar::-webkit-scrollbar-track {
+  background: #342116;
+}
+
+.faq-scrollbar::-webkit-scrollbar-thumb {
+  border: 2px solid #342116;
+  border-radius: 999px;
+  background: #c48a4b;
+}

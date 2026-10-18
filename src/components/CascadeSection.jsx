@@ -5,7 +5,7 @@ export default function CascadeSection({
 }) {
     return (
         <section
-            className={`relative z-10 h-screen w-full ${className}`}
+            className={`relative min-h-screen w-full ${className}`}
             style={{
                 marginTop: `-${overlapScreens * 100}vh`,
             }}
