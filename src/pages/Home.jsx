@@ -4,8 +4,7 @@ import Info from "../components/Info";
 import PrevWinners from "../components/PrevWinners";
 import Footer from "../components/Footer";
 import CherryBlossom from "../components/Cherryblossom"
-import BookSection from "../components/BookSection";
-
+import PrizePool from "../components/PrizePool";
 export default function Home() {
     return (
         <div className="overflow-x-clip">
@@ -16,6 +15,7 @@ export default function Home() {
             <Info />
             <BookSection />
             <PrevWinners />
+            <PrizePool/>
             <Footer />
         </div>
     );
