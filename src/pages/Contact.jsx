@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------
@@ -116,6 +115,22 @@ const A_POSTS = "mc-a-posts";
 const A_GLOW = "mc-a-glow"; // eslint-disable-line no-unused-vars
 const A_EMBER_1 = "mc-a-ember-1";
 const A_EMBER_2 = "mc-a-ember-2";
+const A_LANTERN_SWAY = "mc-a-lantern-sway";
+const A_LANTERN_BLINK = "mc-a-lantern-blink";
+const A_LANTERN_HALO = "mc-a-lantern-halo";
+
+/* ------------------------------------------------------------------
+   LANTERN WINDOWS  (the swaying + blinking lanterns on the stone board)
+   The lanterns are painted into the board art, so we lay a copy of just the
+   lantern area on top of each one and animate that copy.
+   All numbers are % of the board art (width for x/w, height for y/h).
+     x = gap from the board's outer edge to the lantern window
+     w = window width   (must NOT reach the stone pillar, or the pillar will sway too)
+     y = where the window starts (just under the wooden beam, at the top of the chain)
+     h = window height  (down to just under the lantern)
+   If a lantern looks cut off or a bit of pillar/beam moves, nudge these.
+------------------------------------------------------------------ */
+const LANTERN = { x: 0, w: 8.6, y: 11.5, h: 28.5 };
 
 const CARD_DELAYS = ["2.05s", "2.15s", "2.25s", "2.35s"];
 
@@ -140,7 +155,7 @@ const WOOD_BTN_STYLE = artOver(woodPlank, "rgba(60,32,12,0.5)");
 const ARROW_BTN = cx(
   "pointer-events-auto flex flex-none items-center justify-center text-[#f1dcae] leading-none",
   "h-[40px] w-[26px] text-[16px]",
-  "min-[701px]:h-[max(30px,2.9cqw)] min-[701px]:w-[max(18px,1.9cqw)] min-[701px]:text-[length:max(11px,1.25cqw)]",
+  "min-[701px]:h-[max(30px,2.9cqw)] min-[701px]:w-[max(16px,1.55cqw)] min-[701px]:text-[length:max(10px,1.1cqw)]",
   "[text-shadow:2px_2px_0_#2a1608]",
   "border-[3px] border-solid border-[#3a2110]",
   "[box-shadow:inset_0_0_0_2px_rgba(255,220,160,0.25),0_3px_0_rgba(0,0,0,0.4)]",
@@ -255,6 +270,24 @@ const contactPageAnimations = `\
   100% { transform: translate3d(-10px, -26vh, 0); opacity: 0; }
 }
 
+/* lanterns: gentle sway from the top of the chain, and a light blink every few seconds */
+@keyframes mc-lantern-sway {
+  0%, 100% { transform: rotate(-1deg); }
+  50%      { transform: rotate(1deg); }
+}
+@keyframes mc-lantern-blink {
+  0%, 84%, 100% { filter: brightness(1); }
+  88% { filter: brightness(1.28); }
+  92% { filter: brightness(0.94); }
+  96% { filter: brightness(1.14); }
+}
+@keyframes mc-lantern-halo {
+  0%, 84%, 100% { opacity: 0.25; }
+  88% { opacity: 1; }
+  92% { opacity: 0.3; }
+  96% { opacity: 0.8; }
+}
+
 /* animation classes (plain CSS so Tailwind never has to parse them) */
 .mc-a-title     { animation: mc-title-in 0.8s var(--e-title) 0.35s backwards; }
 .mc-a-plank     { animation: mc-plank-in 0.7s var(--e-plank) 0.7s backwards; }
@@ -271,6 +304,9 @@ const contactPageAnimations = `\
 .mc-a-glow      { animation: mc-flicker 3.6s steps(1,end) infinite, mc-fade 1s var(--e-fade) 1.7s backwards; }
 .mc-a-ember-1   { animation: mc-embers 9s linear infinite; }
 .mc-a-ember-2   { animation: mc-embers 12s linear 4.5s infinite; }
+.mc-a-lantern-sway  { animation: mc-lantern-sway 4.6s ease-in-out infinite; transform-origin: 50% 0; will-change: transform; }
+.mc-a-lantern-blink { animation: mc-lantern-blink 5s linear infinite; }
+.mc-a-lantern-halo  { animation: mc-lantern-halo 5s linear infinite; }
 `;
 
 function Contact() {
@@ -383,13 +419,14 @@ function Contact() {
   }, []);
 
   // page-level tweaks that must not leak to other routes:
-  // dark <html> background (no white flash) + hidden scrollbar on desktop
+  // dark <html> background (no white flash) + no scrolling on desktop
   useEffect(() => {
     const html = document.documentElement;
     const prevBg = html.style.backgroundColor;
     const scrollbarClasses = [
       "min-[701px]:[scrollbar-width:none]",
       "min-[701px]:[&::-webkit-scrollbar]:hidden",
+      "min-[701px]:overflow-hidden",
     ];
     html.style.backgroundColor = "#1d1530";
     html.classList.add(...scrollbarClasses);
@@ -414,6 +451,8 @@ function Contact() {
     <div
       className={cx(
         "relative isolate flex min-h-[100dvh] w-full flex-col overflow-x-clip",
+        // desktop: one single page, exactly the screen height, never scrolls
+        "min-[701px]:h-[100dvh] min-[701px]:min-h-0 min-[701px]:overflow-hidden",
         "bg-cover bg-no-repeat bg-[#3a1d1a] [background-position:70%_center]",
         "min-[701px]:bg-[#1d1530] min-[701px]:[background-position:center_58%]",
         "text-[#3b2414]",
@@ -422,7 +461,7 @@ function Contact() {
         "[--strip-h:56px]",
         "min-[701px]:[--u:min(1vw,1.36vh)]",
         "min-[701px]:[--strip-h:clamp(40px,calc(var(--u)_*_7),100px)]",
-        "min-[701px]:[--board-bottom-pad:clamp(20px,calc(var(--u)_*_4),80px)]",
+        "min-[701px]:[--board-bottom-pad:clamp(18px,calc(var(--u)_*_3.2),64px)]",
         ANIMATION === "blocky" ? EASE_BLOCKY : EASE_SMOOTH
       )}
       style={art(contactBackground)}
@@ -493,7 +532,19 @@ function Contact() {
             "[padding:40px_14px_28px] max-[380px]:px-[10px]",
             "[container-type:inline-size]",
             "[filter:drop-shadow(0_0_2px_rgba(0,0,0,0.9))_drop-shadow(0_8px_16px_rgba(0,0,0,0.6))]",
-            "min-[701px]:mt-auto min-[701px]:mb-0 min-[701px]:max-w-[min(1330px,98vw)]",
+            // --hdr = exact height of the heading (title + plank) above the board.
+            //   (80px + 60px = the heading's fixed top spacing: pt-[80px] and the title's md:mt-15; change them if you change that.)
+            // --gap-top = the small space left between the plank and the board. Want it bigger? raise the 0.8.
+            // --S = size of the book + board group. 0.5162 = board height / group width (frame aspect ratio + column split),
+            //   so the group fills the space under the heading exactly and the page never scrolls.
+            //   If the bottom ever gets clipped raise 0.5162 a little (0.53).
+            // --mid-gap = extra space opened in the middle (book moves left, board moves right by half each).
+            //   It shrinks to 0 by itself on screens with no spare width. Max is 9vw.
+            "min-[701px]:[--hdr:calc(80px_+_60px_+_8px_+_clamp(180px,calc(var(--u)_*_31),480px)_*_0.18286_+_clamp(6px,var(--u),14px)_+_2_*_clamp(7px,calc(var(--u)_*_1.1),15px)_+_1.15_*_clamp(13px,calc(var(--u)_*_1.6),22px))]",
+            "min-[701px]:[--gap-top:clamp(6px,calc(var(--u)_*_0.8),14px)]",
+            "min-[701px]:[--S:min(2200px,98vw,calc((100dvh_-_var(--hdr)_-_var(--gap-top)_-_clamp(6px,calc(var(--u)_*_0.9),14px)_-_var(--board-bottom-pad))_/_0.5162_+_2vw))]",
+            "min-[701px]:[--mid-gap:clamp(0px,calc(98vw_-_var(--S)),9vw)]",
+            "min-[701px]:mt-auto min-[701px]:mb-0 min-[701px]:max-w-[var(--S)]",
             "min-[701px]:grid-cols-[minmax(0,30fr)_minmax(0,70fr)] min-[701px]:items-start min-[701px]:gap-x-[1%] min-[701px]:gap-y-0",
             "min-[701px]:[padding:clamp(6px,calc(var(--u)_*_0.9),14px)_1%_var(--board-bottom-pad)]"
           )}
@@ -503,7 +554,7 @@ function Contact() {
             aria-hidden="true"
             className={cx(
               "pointer-events-none absolute z-[-1] max-[700px]:hidden",
-              "col-start-2 col-end-3 row-start-1 row-end-2 left-[11%] top-[78%] w-[72%]",
+              "col-start-2 col-end-3 row-start-1 row-end-2 left-[calc(11%_+_var(--mid-gap)_*_0.5)] top-[78%] w-[72%]",
               "h-[calc(22%_+_var(--board-bottom-pad)_-_var(--strip-h)_*_0.083_+_12px)]",
               "bg-bottom bg-no-repeat [background-size:100%_auto]",
               PIXEL,
@@ -519,7 +570,9 @@ function Contact() {
               "relative isolate grid aspect-[1088/674] w-full max-w-[460px] grid-cols-2 items-center justify-items-center justify-self-center",
               "text-[#3b2414] [padding:3.5%_11%_12.5%_11%]",
               "min-[701px]:max-w-none min-[701px]:self-end",
-              "min-[701px]:mb-[calc(51.1%_-_var(--board-bottom-pad)_+_var(--strip-h)_*_0.083_-_10px)]",
+              // --bk = book size multiplier (1 = column width). left = moves it out into the middle gap's other side.
+              "min-[701px]:[--bk:1.2] min-[701px]:w-[calc(100%_*_var(--bk))] min-[701px]:left-[calc(var(--mid-gap)_*_-0.5)]",
+              "min-[701px]:mb-[calc(51.1%_*_var(--bk)_-_var(--board-bottom-pad)_+_var(--strip-h)_*_0.083_-_10px)]",
               anim(A_DROP)
             )}
           >
@@ -542,28 +595,28 @@ function Contact() {
 
             <h2
               id="email-heading"
-              className="text-center text-[#3b2414] leading-none text-[length:clamp(15px,4.6cqw,22px)] min-[701px]:text-[length:max(12px,2.2cqw)]"
+              className="text-center text-[#3b2414] leading-none text-[length:clamp(15px,4.6cqw,22px)] min-[701px]:text-[length:max(12px,calc(2.2cqw_*_var(--bk)))]"
             >
               <img
                 src={quill}
                 alt=""
                 aria-hidden="true"
                 className={cx(
-                  "mx-auto mb-[0.3em] block aspect-[749/801] w-[clamp(34px,11cqw,56px)] min-[701px]:w-[clamp(40px,6.3cqw,96px)]",
+                  "mx-auto mb-[0.3em] block aspect-[749/801] w-[clamp(34px,11cqw,56px)] min-[701px]:w-[clamp(40px,calc(6.3cqw_*_var(--bk)),108px)]",
                   PIXEL
                 )}
               />
               Email Support
             </h2>
 
-            <div className="flex w-full min-w-0 flex-col items-center gap-2 min-[701px]:gap-[1.4cqw]">
+            <div className="flex w-full min-w-0 flex-col items-center gap-2 min-[701px]:gap-[calc(1.4cqw_*_var(--bk))]">
               {["gdg@sggs.ac.in", "swag@sggs.ac.in"].map((mail) => (
                 <a
                   key={mail}
                   href={`mailto:${mail}`}
                   className={cx(
                     "flex max-w-full flex-col items-center text-center text-[#3b2414] underline underline-offset-[3px] [overflow-wrap:anywhere]",
-                    "leading-[1.05] text-[length:clamp(12px,3.7cqw,17px)] min-[701px]:text-[length:max(10px,1.6cqw)]",
+                    "leading-[1.05] text-[length:clamp(12px,3.7cqw,17px)] min-[701px]:text-[length:max(10px,calc(1.6cqw_*_var(--bk)))]",
                     "min-[701px]:hover:text-[#6b2f0c]",
                     FOCUS_BROWN
                   )}
@@ -573,7 +626,7 @@ function Contact() {
                     alt=""
                     aria-hidden="true"
                     className={cx(
-                      "mb-[2px] block aspect-[616/443] w-[clamp(20px,6.5cqw,30px)] min-[701px]:w-[clamp(26px,3cqw,44px)]",
+                      "mb-[2px] block aspect-[616/443] w-[clamp(20px,6.5cqw,30px)] min-[701px]:w-[clamp(26px,calc(3cqw_*_var(--bk)),50px)]",
                       PIXEL
                     )}
                   />
@@ -588,25 +641,29 @@ function Contact() {
             id="contact"
             aria-labelledby="contact-heading"
             className={cx(
-              // desktop size knobs: --is = header + info plate + avatar frame, --cs = member list (cards, arrows, plate).
-              // bigger number = bigger. (--bs is no longer used for these.)
-              "relative block w-full text-[#f4f1e8] [--bs:0.72] [--is:0.9] [--cs:1.3]",
+              // desktop size knobs (bigger number = bigger):
+              //   --is = header + info paper + avatar frame, --cs = member cards + arrows, --ps = "OTHER TEAM MEMBERS" plate.
+              // (--bs is no longer used for these.)
+              "relative block w-full text-[#f4f1e8] [--bs:0.72] [--is:1.12] [--cs:1.35] [--ps:0.85] [--mw:calc(100%_-_16px)]",
               // mobile frame slices: --hn = natural art height, --m = stretched middle height
-              "[--k:1.35] [--hn:calc(100cqw_*_0.7026_*_var(--k))] [--m:calc(var(--board-h)_-_var(--hn)_*_0.67)]",
+              // --k = vertical stretch of the top/bottom art slices (1.0 = natural proportions, so the lanterns are not squished)
+              "[--k:1.0] [--hn:calc(100cqw_*_0.7026_*_var(--k))] [--m:calc(var(--board-h)_-_var(--hn)_*_0.67)]",
               // mobile: board art stretched to --board-h, derived from the flip-card height
               "[--win:clamp(170px,45vw,225px)] [--card-h:calc(var(--win)_+_84px)] [--board-h:calc((var(--card-h)_+_56px)_/_0.7)]",
               "[padding:calc(var(--board-h)_*_0.185)_18.5%_0_18%] bg-top bg-no-repeat",
               // desktop: board fills its box
               // NOTE: if board-stone-frame-lanterns.webp is not 1288x905, put its real W/H in aspect-[W/H]
-              "min-[701px]:grid min-[701px]:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] min-[701px]:grid-rows-[auto_auto_auto_auto]",
+              "min-[701px]:grid min-[701px]:grid-cols-[minmax(0,0.62fr)_minmax(0,1.38fr)] min-[701px]:grid-rows-[auto_auto_auto_auto]",
               "min-[701px]:content-evenly min-[701px]:items-stretch min-[701px]:gap-x-[3%] min-[701px]:gap-y-0",
               // BOARD SIZE (desktop): the frame fills the right column and sticks out to the left by (grow - 1).
               // If you change --board-grow, also move two things by the same amount:
               //   posts:  left-[11%]  = 14% - half of the extra   (1.06 -> extra 6% -> 14% - 3%)
               //   glow:   [inset:0_-8%_0_-14%] left value = -8% - the extra
               // PADDING = the parchment opening of the frame art: top / right / bottom / left.
-              "min-[701px]:[--board-grow:1.06] min-[701px]:w-[calc(100%_*_var(--board-grow))] min-[701px]:max-w-none min-[701px]:justify-self-end",
-              "min-[701px]:aspect-[1288/905] min-[701px]:[padding:15%_18.5%_17%_18%]",
+              // (the side values are a % of the column, and the board is 6% wider than its column,
+              //  so they are about 6% larger than the opening itself: 18% * 1.06 = 19.5%)
+              "min-[701px]:[--board-grow:1.06] min-[701px]:w-[calc(100%_*_var(--board-grow))] min-[701px]:max-w-none min-[701px]:justify-self-end min-[701px]:left-[calc(var(--mid-gap)_*_0.5)]",
+              "min-[701px]:aspect-[1288/905] min-[701px]:min-h-0 min-[701px]:[padding:15.9%_19.8%_18%_19.5%]",
               "min-[701px]:[background-size:100%_100%] min-[701px]:bg-center min-[701px]:[background-image:var(--board-img)]",
               PIXEL,
               anim(A_RISE)
@@ -648,6 +705,59 @@ function Contact() {
                 backgroundPosition: "center bottom",
               }}
             />
+
+            {/* swaying + blinking lanterns: a copy of just the lantern area of the frame art,
+                laid exactly over the originals (mobile slices and desktop background share the same art box) */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-0 top-0 z-0 h-[var(--hn)] w-full min-[701px]:h-full"
+            >
+              {["left", "right"].map((side, i) => {
+                const left = side === "left" ? LANTERN.x : 100 - LANTERN.x - LANTERN.w;
+                return (
+                  <div
+                    key={side}
+                    className={anim(A_LANTERN_SWAY)}
+                    style={{
+                      position: "absolute",
+                      left: `${left}%`,
+                      top: `${LANTERN.y}%`,
+                      width: `${LANTERN.w}%`,
+                      height: `${LANTERN.h}%`,
+                      overflow: "hidden",
+                      animationDelay: i ? "-2.3s" : "0s",
+                    }}
+                  >
+                    <div
+                      className={cx(PIXEL, anim(A_LANTERN_BLINK))}
+                      style={{
+                        position: "absolute",
+                        left: `${(-left / LANTERN.w) * 100}%`,
+                        top: `${(-LANTERN.y / LANTERN.h) * 100}%`,
+                        width: `${(100 / LANTERN.w) * 100}%`,
+                        height: `${(100 / LANTERN.h) * 100}%`,
+                        backgroundImage: `url(${boardFrame})`,
+                        backgroundSize: "100% 100%",
+                        backgroundRepeat: "no-repeat",
+                        animationDelay: i ? "-2.5s" : "0s",
+                      }}
+                    />
+                    <div
+                      className={anim(A_LANTERN_HALO)}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        opacity: 0.25,
+                        mixBlendMode: "screen",
+                        background:
+                          "radial-gradient(ellipse closest-side at 50% 72%, rgba(255,190,90,0.55) 0%, rgba(255,150,50,0.18) 55%, rgba(255,150,50,0) 100%)",
+                        animationDelay: i ? "-2.5s" : "0s",
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
 
             {/* "Contact Person" stone header plate */}
             <h2
@@ -731,7 +841,7 @@ function Contact() {
               {/* ---- mobile: flip card (front = character, back = parchment) ---- */}
               <div
                 className={cx(
-                  "relative z-[1] mx-auto h-[var(--card-h)] w-[calc(100%_-_16px)] overflow-hidden [perspective:1000px] min-[701px]:hidden",
+                  "relative z-[1] mx-auto h-[var(--card-h)] w-[var(--mw)] overflow-hidden [perspective:1000px] min-[701px]:hidden",
                   anim(A_FADE_CARD)
                 )}
               >
@@ -782,13 +892,13 @@ function Contact() {
                     )}
                     style={art(parchmentLarge)}
                   >
-                    <h3 className="mb-[6px] text-[#2b1608] leading-[0.95] [text-wrap:balance] text-[length:clamp(22px,6.4cqw,30px)]">
+                    <h3 className="mb-[6px] text-[#2b1608] leading-[0.95] [text-wrap:balance] text-[length:clamp(25px,7cqw,34px)]">
                       {selectedContact.name}
                     </h3>
-                    <p className="my-[2px] text-[#3b2414] leading-none text-[length:clamp(17px,4.6cqw,22px)]">
+                    <p className="my-[2px] text-[#3b2414] leading-none text-[length:clamp(20px,5.4cqw,26px)]">
                       {selectedContact.role}
                     </p>
-                    <p className="my-[2px] text-[#3b2414] leading-none text-[length:clamp(17px,4.6cqw,22px)]">
+                    <p className="my-[2px] text-[#3b2414] leading-none text-[length:clamp(20px,5.4cqw,26px)]">
                       <a
                         href={`tel:${selectedContact.phone}`}
                         className="text-[#5a2d0a] underline underline-offset-[3px]"
@@ -813,13 +923,13 @@ function Contact() {
             <h3
               className={cx(
                 "relative z-[1] block text-center text-[#1b1b1b] leading-[1.2]",
-                "w-[calc(100%_-_16px)] [margin:0_8px] [padding:0.7em_0.4em_0.75em] text-[length:clamp(9px,3.3cqw,13px)]",
+                "box-border w-[var(--mw)] [margin:0_auto] [padding:0.7em_0.4em_0.75em] text-[length:clamp(9px,3.3cqw,13px)]",
                 "[text-shadow:0_1px_0_rgba(255,255,255,0.45)]",
                 "border-[3px] border-solid border-[#2e2e2e]",
                 "[box-shadow:inset_0_0_0_2px_rgba(255,255,255,0.3),0_3px_0_rgba(0,0,0,0.35)]",
                 "min-[701px]:col-start-2 min-[701px]:row-start-3 min-[701px]:self-end min-[701px]:w-full",
-                "min-[701px]:[margin:calc(1.3cqw_*_var(--cs))_0_calc(0.8cqw_*_var(--cs))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
-                "min-[701px]:text-[length:max(8px,calc(0.95cqw_*_var(--cs)))]",
+                "min-[701px]:[margin:calc(1.3cqw_*_var(--ps))_0_calc(0.8cqw_*_var(--ps))] min-[701px]:[padding:0.55em_0.4em_0.6em]",
+                "min-[701px]:text-[length:max(8px,calc(0.95cqw_*_var(--ps)))]",
                 HEAD,
                 COVER,
                 PIXEL,
@@ -833,7 +943,7 @@ function Contact() {
             {/* ---- member cards: scroll-snap row with < > arrows (wooden tray on mobile) ---- */}
             <div
               className={cx(
-                "relative z-[1] min-w-0 w-[calc(100%_-_16px)] [margin:0_8px]",
+                "relative z-[1] box-border min-w-0 w-[var(--mw)] [margin:0_auto]",
                 "min-[701px]:col-start-2 min-[701px]:row-start-4 min-[701px]:m-0 min-[701px]:w-full min-[701px]:max-w-full"
               )}
             >
@@ -844,13 +954,15 @@ function Contact() {
                 "[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]",
                 "[scroll-snap-type:x_mandatory]",
                 // mobile tray (30px side padding leaves room for the arrows)
+                // border matches the Contact Person card above (6px, same bevel colours) so the edges line up
                 "gap-[10px] [padding:12px_30px_24px] [scroll-padding-inline:30px]",
-                "max-[700px]:border-[4px] max-[700px]:border-solid max-[700px]:border-[#7a4e27] max-[700px]:border-t-0",
+                "max-[700px]:border-[6px] max-[700px]:border-solid max-[700px]:border-[#7a4e27] max-[700px]:border-t-0",
+                "max-[700px]:border-l-[#8f5f32] max-[700px]:border-b-[#4d2f17] max-[700px]:border-r-[#5b361b]",
                 "max-[700px]:bg-[linear-gradient(180deg,#3b2616,#2a1a10)]",
-                "max-[700px]:[box-shadow:0_0_0_2px_#1a0f08,inset_0_0_14px_rgba(0,0,0,0.5)]",
+                "max-[700px]:[box-shadow:inset_0_0_14px_rgba(0,0,0,0.5)]",
                 // desktop row
                 "min-[701px]:max-w-full min-[701px]:items-stretch",
-                "min-[701px]:gap-[calc(1cqw_*_var(--cs))] min-[701px]:[padding:10px_max(18px,2.1cqw)_24px] min-[701px]:[scroll-padding-inline:max(18px,2.1cqw)]"
+                "min-[701px]:gap-[calc(1cqw_*_var(--cs))] min-[701px]:[padding:max(5px,0.8cqw)_max(16px,1.75cqw)_max(8px,1.2cqw)] min-[701px]:[scroll-padding-inline:max(16px,1.75cqw)]"
               )}
             >
               {teamMembers.map((member, index) => {
@@ -867,9 +979,9 @@ function Contact() {
                     }}
                     className={cx(
                       "snap-start shrink-0 grow-0 aspect-[1032/488]",
-                      "[--cw:clamp(132px,38vw,168px)] min-[701px]:[--cw:calc((100%_-_calc(1cqw_*_var(--cs)))_/_2)]",
+                      "[--cw:min(clamp(150px,44vw,190px),100%)] min-[701px]:[--cw:calc((100%_-_calc(1cqw_*_var(--cs)))_/_2)]",
                       "w-[var(--cw)] min-w-[var(--cw)] max-w-[var(--cw)]",
-                      "flex flex-col items-center justify-center text-center text-[#3b2414] [padding:5%_9%] min-[701px]:[padding:calc(var(--cw)_*_0.05)_calc(var(--cw)_*_0.07)] [overflow-wrap:anywhere]",
+                      "flex flex-col items-center justify-center text-center text-[#3b2414] [padding:5%_9%] min-[701px]:[padding:calc(var(--cw)_*_0.04)_calc(var(--cw)_*_0.055)] [overflow-wrap:anywhere]",
                       "[transition:transform_0.12s_steps(2),translate_0.12s_steps(2),filter_0.12s_steps(2)] motion-reduce:[transition:none]",
                       selected
                         ? "-translate-y-[3px] [filter:drop-shadow(0_0_6px_#ffd24a)_drop-shadow(0_0_2px_#ffd24a)] motion-reduce:translate-y-0"
@@ -880,10 +992,10 @@ function Contact() {
                       anim(A_POP_CARD)
                     )}
                   >
-                    <h4 className="mb-[0.2em] w-full text-[15px] leading-[0.95] text-[#2b1608] [text-wrap:balance] [overflow-wrap:anywhere] min-[701px]:text-[length:max(11px,calc(1.45cqw_*_var(--cs)))]">
+                    <h4 className="mb-[0.2em] w-full text-[19px] leading-[0.95] text-[#2b1608] [text-wrap:balance] [overflow-wrap:anywhere] min-[701px]:text-[length:max(11px,calc(1.45cqw_*_var(--cs)))]">
                       {member.name}
                     </h4>
-                    <p className="w-full text-[12px] leading-none text-[#3b2414] [overflow-wrap:anywhere] min-[701px]:text-[length:max(9px,calc(1.15cqw_*_var(--cs)))]">
+                    <p className="w-full text-[15px] leading-none text-[#3b2414] [overflow-wrap:anywhere] min-[701px]:text-[length:max(9px,calc(1.15cqw_*_var(--cs)))]">
                       {member.role}
                     </p>
                   </button>
@@ -892,7 +1004,7 @@ function Contact() {
             </div>
 
             {/* < > arrows: show that the list scrolls */}
-            <div className="pointer-events-none absolute inset-y-0 left-[2px] z-[2] flex items-center pb-[14px]">
+            <div className="pointer-events-none absolute inset-y-0 left-[2px] z-[2] flex items-center pb-[14px] min-[701px]:pb-[6px]">
               <button
                 type="button"
                 aria-label="Show previous team members"
@@ -904,7 +1016,7 @@ function Contact() {
                 &lt;
               </button>
             </div>
-            <div className="pointer-events-none absolute inset-y-0 right-[2px] z-[2] flex items-center pb-[14px]">
+            <div className="pointer-events-none absolute inset-y-0 right-[2px] z-[2] flex items-center pb-[14px] min-[701px]:pb-[6px]">
               <button
                 type="button"
                 aria-label="Show next team members"
