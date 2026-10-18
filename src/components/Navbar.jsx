@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import chainSignA from "../assets/pageassets-clean/nav-sign-chain-a.WebP"
 import chainSignB from "../assets/pageassets-clean/nav-sign-chain-b.WebP"
 import woodPlank from "../assets/pageassets-clean/plank-panel-wood-spare.Webp"
@@ -22,6 +22,10 @@ const RIGHT_LINKS = [
 ]
 
 const MOBILE_LINKS = [...LEFT_LINKS, ...RIGHT_LINKS]
+
+// hide the desktop nav once the Info section's top edge is within this many px of the viewport top
+// (roughly the height of the hanging signs; raise it to hide earlier, lower it to hide later)
+const NAV_HEIGHT = 110
 
 /* A single wooden sign hanging from two chains. Renders a link when `to` is given, otherwise a button. */
 function HangingSign({ to, index, children, square = false, onClick, label, expanded }) {
@@ -57,7 +61,6 @@ function HangingSign({ to, index, children, square = false, onClick, label, expa
                         aria-hidden="true"
                         className="absolute inset-0 h-full w-full object-fill"
                     />
-                    {/* Changed whitespace-nowrap to text-center, and leading-none to leading-tight */}
                     <span
                         className={`absolute inset-x-[8%] flex items-center justify-center text-center font-['Press_Start_2P',monospace] text-[7px] uppercase leading-tight tracking-[0.5px] text-black [text-shadow:1px_1px_0_rgba(255,255,255,0.3)] sm:text-[10px] ${square
                                 ? "top-[58%] bottom-[6%]"
@@ -71,7 +74,6 @@ function HangingSign({ to, index, children, square = false, onClick, label, expa
         </motion.div>
     )
 }
-
 
 /* Small pixel grass block used as the centre "logo" sign */
 function GrassBlock() {
@@ -108,8 +110,52 @@ function BurgerIcon({ open }) {
 
 export default function Navbar() {
     const [open, setOpen] = useState(false)
+    const { pathname } = useLocation()
+    const [pastHero, setPastHero] = useState(false)
+    const [hovered, setHovered] = useState(false)
+    const leaveTimer = useRef(null)
 
-    // close on Escape
+    // The hero stays pinned while Info slides over it, so "is the hero visible?" never turns false
+    // at the right time. Instead, hide the desktop nav as soon as the top edge of the Info section
+    // (the element with id="info") reaches the navbar area.
+    useEffect(() => {
+        setPastHero(false)
+        const info = document.getElementById("info")
+        if (!info) return // no Info section on this page -> navbar stays visible
+
+        let raf = 0
+        const check = () => {
+            raf = 0
+            setPastHero(info.getBoundingClientRect().top <= NAV_HEIGHT)
+        }
+        const onScroll = () => {
+            if (!raf) raf = requestAnimationFrame(check)
+        }
+
+        check()
+        window.addEventListener("scroll", onScroll, { passive: true })
+        window.addEventListener("resize", onScroll)
+        return () => {
+            cancelAnimationFrame(raf)
+            window.removeEventListener("scroll", onScroll)
+            window.removeEventListener("resize", onScroll)
+        }
+    }, [pathname])
+
+    useEffect(() => () => clearTimeout(leaveTimer.current), [])
+
+    // small delay on leave so the nav doesn't flicker if the cursor slips off
+    const showNav = () => {
+        clearTimeout(leaveTimer.current)
+        setHovered(true)
+    }
+    const hideNav = () => {
+        leaveTimer.current = setTimeout(() => setHovered(false), 200)
+    }
+
+    const desktopVisible = !pastHero || hovered
+
+    // close mobile menu on Escape
     useEffect(() => {
         if (!open) return
         const onKey = (e) => e.key === "Escape" && setOpen(false)
@@ -122,26 +168,41 @@ export default function Navbar() {
             {/* label bob keyframes used by the desktop hover effect */}
             <style>{`@keyframes sign-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-2px) } }`}</style>
 
-            {/* desktop / tablet nav */}
-            <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden items-start justify-center gap-1 sm:flex sm:gap-2 lg:gap-6">
-                {LEFT_LINKS.map((l, i) => (
-                    <HangingSign key={l.label} to={l.to} index={i}>
-                        {l.label}
+            {/* desktop / tablet nav: shown in the hero, otherwise only on hover */}
+            <div
+                className="pointer-events-none fixed inset-x-0 top-0 z-50 hidden sm:block"
+                onMouseEnter={showNav}
+                onMouseLeave={hideNav}
+                onFocus={showNav}
+                onBlur={hideNav}
+            >
+                {/* invisible hover strip at the very top of the screen */}
+                <div className="pointer-events-auto absolute inset-x-0 top-0 h-20" />
+
+                <motion.nav
+                    className="pointer-events-none flex items-start justify-center gap-1 sm:gap-2 lg:gap-6"
+                    animate={{ y: desktopVisible ? 0 : "-120%" }}
+                    transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                >
+                    {LEFT_LINKS.map((l, i) => (
+                        <HangingSign key={l.label} to={l.to} index={i}>
+                            {l.label}
+                        </HangingSign>
+                    ))}
+
+                    <HangingSign to="/" index={2} square>
+                        <GrassBlock />
                     </HangingSign>
-                ))}
 
-                <HangingSign to="/" index={2} square>
-                    <GrassBlock />
-                </HangingSign>
+                    {RIGHT_LINKS.map((l, i) => (
+                        <HangingSign key={l.label} to={l.to} index={i + 3}>
+                            {l.label}
+                        </HangingSign>
+                    ))}
+                </motion.nav>
+            </div>
 
-                {RIGHT_LINKS.map((l, i) => (
-                    <HangingSign key={l.label} to={l.to} index={i + 3}>
-                        {l.label}
-                    </HangingSign>
-                ))}
-            </nav>
-
-            {/* mobile nav: home sign on the left, hamburger sign on the right */}
+            {/* mobile nav: home sign on the left, hamburger sign on the right (always visible) */}
             <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 flex items-start justify-between px-3 sm:hidden">
                 <HangingSign to="/" index={0} square>
                     <GrassBlock />
