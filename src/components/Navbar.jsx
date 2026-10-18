@@ -18,7 +18,7 @@ const LEFT_LINKS = [
 
 const RIGHT_LINKS = [
     { label: "PS", to: "/" },
-    { label: "FAQ", to: "/" },
+    { label: "FAQ", to: "/faq" },
     { label: "Contact", to: "/contact" },
 ]
 
