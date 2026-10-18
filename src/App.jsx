@@ -5,6 +5,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Faq = lazy(() => import("./pages/Faq"));
 import SplashScreen from "../src/components/SplashScreen"
+import ProblemStatement from "./pages/ProblemStatement";
 // import Schedule from "./pages/Schedule";
 // import RegistrationForm from "./pages/RegistrationForm";
 // import { BackgroundGradientAnimation } from "./components/ui/background-gradient-animation";
@@ -47,6 +48,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/contact" element={<Contact />} /> {/* ADDED */}
               <Route path="/faq" element={<Faq />} />
+              <Route path="/problem-statement" element={<ProblemStatement />} />
               {/* <Route path="/registration" element={<RegistrationForm/>} />
               <Route path="/login" element={<Login/>} />
               <Route path="/dashboard" element={<Dashboard/>} />
