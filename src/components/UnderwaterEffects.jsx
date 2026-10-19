@@ -49,7 +49,7 @@ export const UnderwaterEffects = () => {
   const [bubbles] = useState(() => generateBubbles(24));
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" aria-hidden="true">
       {/* CSS keyframes injected once */}
       <style>{`
         @keyframes uw-float-up {
