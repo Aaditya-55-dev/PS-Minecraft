@@ -13,10 +13,10 @@ const loadBook = () => import("./MinecraftBook.jsx");
 const MinecraftBook = lazy(loadBook);
 
 const LANTERNS = [
-  ["left-0 top-[-3%]", 0, "0ms"],
+  // ["left-0 top-[-3%]", 0, "0ms"],
   ["left-[18%] top-[7%] max-[540px]:left-[22%] max-[540px]:top-[9%]", -2, "150ms"],
   ["right-[18%] top-[-4%] max-[540px]:right-[22%] max-[540px]:top-[-3%]", -3.5, "280ms"],
-  ["right-0 top-[8%] max-[540px]:right-[-5%] max-[540px]:top-[10%]", -1, "420ms"],
+  // ["right-0 top-[8%] max-[540px]:right-[-5%] max-[540px]:top-[10%]", -1, "420ms"],
 ];
 
 export default function BookSection() {
@@ -49,16 +49,16 @@ export default function BookSection() {
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-[1] aspect-square w-[min(78vw,880px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,189,103,.13),rgba(95,159,119,.09)_42%,transparent_70%)] blur-[24px] max-[540px]:blur-none" />
       <div className="pointer-events-none absolute inset-x-0 -top-[3%] bottom-0 z-[1] overflow-hidden" aria-hidden="true">
         {/* Left vine panel. On phones the filter shadow is removed and the inner edge is faded with a mask. */}
-        <div className={`absolute left-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_180ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,#000_78%,transparent)] max-[540px]:[mask-image:linear-gradient(90deg,#000_78%,transparent)]`}>
+        {/* <div className={`absolute left-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_180ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,#000_78%,transparent)] max-[540px]:[mask-image:linear-gradient(90deg,#000_78%,transparent)]`}>
           <img className="block h-full w-full select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </div>
+        </div> */}
         {/* Center vine panel: hidden on phones (the two side panels already overlap there), saving a whole layer. */}
-        <div className={`absolute left-[calc(50%_-_min(27.5vw,450px))] top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_360ms_both]" : ""} max-[540px]:hidden`}>
+        {/* <div className={`absolute left-[calc(50%_-_min(27.5vw,450px))] top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_360ms_both]" : ""} max-[540px]:hidden`}>
           <img className="block h-full w-full select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </div>
-        <div className={`absolute right-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_540ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,transparent,#000_22%)] max-[540px]:[mask-image:linear-gradient(90deg,transparent,#000_22%)]`}>
+        </div> */}
+        {/* <div className={`absolute right-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_540ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,transparent,#000_22%)] max-[540px]:[mask-image:linear-gradient(90deg,transparent,#000_22%)]`}>
           <img className="block h-full w-full scale-x-[-1] select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </div>
+        </div> */}
       </div>
       <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
         {LANTERNS.map(([pos, sway, delay], i) => <img key={i} className={`absolute w-[clamp(180px,18vw,310px)] mix-blend-screen [filter:drop-shadow(0_0_16px_rgba(255,153,44,.42))_drop-shadow(0_20px_14px_rgba(0,0,0,.88))_drop-shadow(0_8px_8px_rgba(0,0,0,.68))] translate-y-[-220px] opacity-0 will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${pos} max-[540px]:w-[clamp(130px,25vw,190px)] max-[540px]:[filter:drop-shadow(0_0_8px_rgba(255,153,44,.4))]`} style={{ animation: entered ? "lantern-drop-in 1s cubic-bezier(.18,.72,.24,1) both, lantern-sway 5.5s ease-in-out infinite alternate" : undefined, animationDelay: entered ? `${delay},${sway}s` : undefined, animationPlayState: visible ? "running" : "paused" }} src={hangingLantern} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />)}
@@ -80,8 +80,8 @@ export default function BookSection() {
               <Suspense fallback={null}>
                 <MinecraftBook />
               </Suspense>
-              <img className="pointer-events-none absolute left-[-12%] top-[-3%] z-[12] w-[clamp(112px,27%,240px)] -scale-x-100 select-none object-contain drop-shadow-[0_8px_10px_rgba(0,0,0,.42)] max-[540px]:left-[-9%] max-[540px]:top-[-1%] max-[540px]:w-[28%] max-[540px]:drop-shadow-none" src={chickenFlapping} alt="" aria-hidden="true" decoding="async" draggable="false" />
-              <img className="pointer-events-none absolute right-[-12%] bottom-[-3%] z-[12] w-[clamp(112px,27%,240px)] select-none object-contain drop-shadow-[0_8px_10px_rgba(0,0,0,.42)] max-[540px]:right-[-9%] max-[540px]:bottom-[-1%] max-[540px]:w-[28%] max-[540px]:drop-shadow-none" src={coldFrog} alt="" aria-hidden="true" decoding="async" draggable="false" />
+              {/* <img className="pointer-events-none absolute left-[-12%] top-[-3%] z-[12] w-[clamp(112px,27%,240px)] -scale-x-100 select-none object-contain drop-shadow-[0_8px_10px_rgba(0,0,0,.42)] max-[540px]:left-[-9%] max-[540px]:top-[-1%] max-[540px]:w-[28%] max-[540px]:drop-shadow-none" src={chickenFlapping} alt="" aria-hidden="true" decoding="async" draggable="false" />
+              <img className="pointer-events-none absolute right-[-12%] bottom-[-3%] z-[12] w-[clamp(112px,27%,240px)] select-none object-contain drop-shadow-[0_8px_10px_rgba(0,0,0,.42)] max-[540px]:right-[-9%] max-[540px]:bottom-[-1%] max-[540px]:w-[28%] max-[540px]:drop-shadow-none" src={coldFrog} alt="" aria-hidden="true" decoding="async" draggable="false" /> */}
             </>
           )}
           <button
