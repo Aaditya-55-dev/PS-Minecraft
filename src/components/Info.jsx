@@ -125,8 +125,8 @@ export default function Info() {
             <Layer section="s1" x={7} width={86} top="3%" speed={0} z={12} className="max-[768px]:!left-[4vw] max-[768px]:!top-[3%] max-[768px]:!w-[92vw]">
               <h2 id="morning-heading" className="text-center text-[clamp(24px,3vw,48px)] font-bold leading-[1.45] text-[#fff5d8] [font-family:'Press_Start_2P',monospace] [text-shadow:3px_4px_0_#160b25,0_0_22px_#140a30] max-[768px]:text-[clamp(18px,4.8vw,23px)]">A Fusion of Ideas, Code, and Excitement!</h2>
             </Layer>
-            <Layer section="s1" image="morning-parchment-banner.webp" x={27} width={46} top="17%" speed={0} z={7} className="max-[768px]:!left-[8vw] max-[768px]:!top-[25%] max-[768px]:!w-[84vw]">
-              <div id="morning-description" className="absolute left-[18%] right-[18%] top-[7%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(22px,1.8vw,32px)] font-bold leading-[1.02] text-[#3b2615] [text-shadow:0_1px_0_rgba(255,255,220,.55)] max-[768px]:left-[15%] max-[768px]:right-[15%] max-[768px]:text-[clamp(12px,3.2vw,14px)]">
+            <Layer section="s1" image="morning-parchment-banner.webp" x={27} width={46} top="17%" speed={0} z={14} className="max-[768px]:!left-[8vw] max-[768px]:!top-[25%] max-[768px]:!w-[84vw]">
+              <div id="morning-description" className="absolute left-[18%] right-[18%] top-[7%] bottom-[8%] flex items-center justify-center overflow-hidden px-1 text-center text-[clamp(16px,1.2vw,20px)] font-bold leading-[1.5] text-[#3b2615] [font-family:'Press_Start_2P',monospace] [text-shadow:0_1px_0_rgba(255,255,220,.55)] max-[768px]:left-[15%] max-[768px]:right-[15%] max-[768px]:text-[clamp(11px,2.8vw,13px)] max-[768px]:leading-[1.25]">
                 <p>Join <strong>Hackfusion 4</strong>, a national-level hackathon at <strong>SGGSIE&amp;T Nanded</strong>, where 100+ teams unite to innovate, code, and compete! Experience the fusion of ideas, technology, and excitement while connecting with passionate developers, expert mentors, and industry sponsors.</p>
               </div>
             </Layer>
