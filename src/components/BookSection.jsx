@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { AnimatePresence, motion, useInView } from "motion/react";
 import mossyStoneWall from "../assets/digvijay's_assets/mossy-stone-wall-m.webp";
 import glowingVineCanopy from "../assets/digvijay's_assets/glowing-vine-canopy.webp";
 import hangingLantern from "../assets/digvijay's_assets/hanging-lantern-asset.webp";
@@ -11,9 +11,6 @@ import ruleBookCover from "../assets/digvijay's_assets/pixel-art-rule-book-cover
 // The book (and its assets) is code-split: nothing from it is rendered or decoded until the person opens it.
 const loadBook = () => import("./MinecraftBook.jsx");
 const MinecraftBook = lazy(loadBook);
-
-// Parallax only makes sense with a real mouse; phones skip the pointer handlers entirely.
-const canHover = typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(any-hover: hover) and (any-pointer: fine)").matches;
 
 const LANTERNS = [
   ["left-0 top-[-3%]", 0, "0ms"],
@@ -29,18 +26,6 @@ export default function BookSection() {
   // `entered` fires once (drop-in animations); `visible` is live and pauses looping animations off-screen.
   const entered = useInView(sectionRef, { once: true, amount: 0.18 });
   const visible = useInView(sectionRef, { margin: "200px 0px" });
-  const reduceMotion = useReducedMotion();
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const springX = useSpring(pointerX, { stiffness: 48, damping: 18, mass: 0.8 });
-  const springY = useSpring(pointerY, { stiffness: 48, damping: 18, mass: 0.8 });
-  const motionScale = reduceMotion ? 0.35 : 1;
-  const sideVinesX = useTransform(() => springX.get() * 38 * motionScale);
-  const sideVinesY = useTransform(() => springY.get() * 24 * motionScale);
-  const centerVineX = useTransform(() => springX.get() * 20 * motionScale);
-  const centerVineY = useTransform(() => springY.get() * 12 * motionScale);
-  const lanternsX = useTransform(() => springX.get() * 72 * motionScale);
-  const lanternsY = useTransform(() => springY.get() * 48 * motionScale);
 
   // Warm up the book's code (not its rendering) shortly after the section appears, so opening feels instant.
   useEffect(() => {
@@ -51,18 +36,6 @@ export default function BookSection() {
     return () => cancel(id);
   }, [entered]);
 
-  const trackPointer = (event) => {
-    if (event.pointerType === "touch") return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2);
-    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2);
-  };
-
-  const resetPointer = () => {
-    pointerX.set(0);
-    pointerY.set(0);
-  };
-
   const openBook = () => { setHasOpened(true); setIsBookOpen(true); };
 
   return (
@@ -70,28 +43,26 @@ export default function BookSection() {
       ref={sectionRef}
       className="relative isolate grid min-h-svh place-items-center overflow-visible bg-[#101914] px-4 py-8 max-[540px]:min-h-[88svh] max-[540px]:px-3 max-[540px]:pt-[34vw] max-[540px]:pb-8 max-[540px]:overflow-x-clip"
       aria-label="HackFusion field notes"
-      onPointerMove={canHover ? trackPointer : undefined}
-      onPointerLeave={canHover ? resetPointer : undefined}
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[100vw] w-[100svh] -translate-x-1/2 -translate-y-1/2 rotate-90 bg-[#101914] bg-center bg-no-repeat [background-size:100%_100%,100%_100%,100%_100%] max-[540px]:!h-full max-[540px]:!w-full max-[540px]:!rotate-0 max-[540px]:![background-size:100%_100%,100%_100%,cover]" style={{ backgroundImage: `linear-gradient(180deg,rgba(3,12,11,.24),transparent 24% 76%,rgba(3,10,14,.44)),radial-gradient(ellipse at 50% 48%,transparent 34%,rgba(5,12,12,.44)),url("${mossyStoneWall}")` }} />
       {/* Big soft glow: the 24px blur is the most expensive paint here, so phones use a plain radial gradient (no blur filter). */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-[1] aspect-square w-[min(78vw,880px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,189,103,.13),rgba(95,159,119,.09)_42%,transparent_70%)] blur-[24px] max-[540px]:blur-none" />
       <div className="pointer-events-none absolute inset-x-0 -top-[3%] bottom-0 z-[1] overflow-hidden" aria-hidden="true">
         {/* Left vine panel. On phones the filter shadow is removed and the inner edge is faded with a mask. */}
-        <motion.div className={`absolute left-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_180ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,#000_78%,transparent)] max-[540px]:[mask-image:linear-gradient(90deg,#000_78%,transparent)]`} style={{ x: sideVinesX, y: sideVinesY }}>
+        <div className={`absolute left-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_180ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,#000_78%,transparent)] max-[540px]:[mask-image:linear-gradient(90deg,#000_78%,transparent)]`}>
           <img className="block h-full w-full select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </motion.div>
+        </div>
         {/* Center vine panel: hidden on phones (the two side panels already overlap there), saving a whole layer. */}
-        <motion.div className={`absolute left-[calc(50%_-_min(27.5vw,450px))] top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_360ms_both]" : ""} max-[540px]:hidden`} style={{ x: centerVineX, y: centerVineY }}>
+        <div className={`absolute left-[calc(50%_-_min(27.5vw,450px))] top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_360ms_both]" : ""} max-[540px]:hidden`}>
           <img className="block h-full w-full select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </motion.div>
-        <motion.div className={`absolute right-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_540ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,transparent,#000_22%)] max-[540px]:[mask-image:linear-gradient(90deg,transparent,#000_22%)]`} style={{ x: sideVinesX, y: sideVinesY }}>
+        </div>
+        <div className={`absolute right-0 top-0 h-full w-[min(55vw,900px)] translate-y-[-150px] opacity-0 [filter:drop-shadow(0_22px_24px_rgba(0,0,0,.72))_drop-shadow(0_8px_10px_rgba(0,0,0,.48))] will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${entered ? "animate-[vines-drop-in_1.05s_cubic-bezier(.18,.72,.24,1)_540ms_both]" : ""} max-[540px]:w-[64vw] max-[540px]:[filter:none] max-[540px]:[-webkit-mask-image:linear-gradient(90deg,transparent,#000_22%)] max-[540px]:[mask-image:linear-gradient(90deg,transparent,#000_22%)]`}>
           <img className="block h-full w-full scale-x-[-1] select-none object-cover object-top mix-blend-lighten" src={glowingVineCanopy} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
-        </motion.div>
+        </div>
       </div>
-      <motion.div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden will-change-transform" aria-hidden="true" style={{ x: lanternsX, y: lanternsY }}>
+      <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
         {LANTERNS.map(([pos, sway, delay], i) => <img key={i} className={`absolute w-[clamp(180px,18vw,310px)] mix-blend-screen [filter:drop-shadow(0_0_16px_rgba(255,153,44,.42))_drop-shadow(0_20px_14px_rgba(0,0,0,.88))_drop-shadow(0_8px_8px_rgba(0,0,0,.68))] translate-y-[-220px] opacity-0 will-change-transform motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:animate-none ${pos} max-[540px]:w-[clamp(130px,25vw,190px)] max-[540px]:[filter:drop-shadow(0_0_8px_rgba(255,153,44,.4))]`} style={{ animation: entered ? "lantern-drop-in 1s cubic-bezier(.18,.72,.24,1) both, lantern-sway 5.5s ease-in-out infinite alternate" : undefined, animationDelay: entered ? `${delay},${sway}s` : undefined, animationPlayState: visible ? "running" : "paused" }} src={hangingLantern} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />)}
-      </motion.div>
+      </div>
       <img className="pointer-events-none absolute left-0 top-[-22vh] z-[1] block h-auto w-full select-none max-[540px]:top-[-15vw]" src={rulebookTransition} alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false" />
       <motion.div
         className="relative z-[2] w-[min(96vw,72svh,980px)] [aspect-ratio:736/904] [transform-style:preserve-3d] [filter:drop-shadow(0_42px_46px_rgba(0,0,0,.88))_drop-shadow(0_14px_16px_rgba(0,0,0,.72))] will-change-transform max-[540px]:w-[min(84vw,60svh)] max-[540px]:[filter:drop-shadow(0_14px_16px_rgba(0,0,0,.6))]"
@@ -154,7 +125,3 @@ export default function BookSection() {
     </section>
   );
 }
-
-
-
-

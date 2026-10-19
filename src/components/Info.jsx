@@ -49,82 +49,64 @@ function FloatLayer({ item }) {
 export default function Info() {
   const worldRef = useRef(null);
   useEffect(() => {
-    const world = worldRef.current;
-    if (!world) return undefined;
-    const touch = matchMedia("(pointer: coarse)").matches;
-    const canMouseParallax = matchMedia("(any-hover: hover) and (any-pointer: fine)").matches;
-    const OrientationEvent = window.DeviceOrientationEvent;
-    const hasOrientation = !!OrientationEvent;
-    const requiresTiltPermission = typeof OrientationEvent?.requestPermission === "function";
-    // Mobile only: stop any stray horizontal overflow from shifting/clipping the page sideways.
-    const root = document.documentElement, body = document.body, prevRootX = root.style.overflowX, prevBodyX = body.style.overflowX;
-    if (matchMedia("(max-width: 600px)").matches) { root.style.overflowX = "clip"; body.style.overflowX = "clip"; }
+  const world = worldRef.current;
+  if (!world) return undefined;
 
-    const parent = world.parentElement, grade = parent.querySelector(".world-grade");
-    const sections = [...world.querySelectorAll(".world-section")];
-    const layerElements = [...world.querySelectorAll(".world-layer")]; const layers = layerElements.map((element, index) => { const speed = Number(element.dataset.speed || 0), z = Number(element.dataset.depth || 1); const depth = .2 + (z / 30) * .72 + Math.abs(speed) * .35 + (index % 7) * .035, parallaxRate = .55 + (index / Math.max(1, layerElements.length - 1)) * 1.1; return { element, si: Number(element.dataset.section.slice(1)) - 1, speed, depth, parallaxRate }; });
-    const geo = sections.map(() => ({ mid: 0, end: 0 }));
-    const grades = ["rgba(255,210,150,.12)", "rgba(10,5,0,.45)", "rgba(110,30,190,.3)", "rgba(0,0,0,0)"];
-    const motionScale = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.35 : 1;
-    let current = scrollY, target = scrollY, pointerX = 0, pointerY = 0, smoothX = 0, smoothY = 0, viewportHeight = innerHeight, raf = 0, resizeTimer, mounted = true, gradeIdx = -1, baseBeta = null, baseGamma = null, orientationListening = false;
+  // Mobile only: stop any stray horizontal overflow from shifting/clipping the page sideways.
+  const root = document.documentElement, body = document.body, prevRootX = root.style.overflowX, prevBodyX = body.style.overflowX;
+  if (matchMedia("(max-width: 600px)").matches) { root.style.overflowX = "clip"; body.style.overflowX = "clip"; }
 
-    const schedule = () => { if (!raf && mounted) raf = requestAnimationFrame(draw); };
-    // Section geometry is measured ONCE (and on resize), never inside the frame loop,
-    // so scrolling does no layout reads and stays on the fast compositor path.
-    const measure = () => {
-      viewportHeight = innerHeight;
-      const origin = parent.getBoundingClientRect().top + scrollY;
-      sections.forEach((s, i) => { geo[i] = { mid: origin + s.offsetTop + s.offsetHeight / 2, end: origin + s.offsetTop + s.offsetHeight }; });
-      schedule();
-    };
-    const onScroll = () => { target = scrollY; schedule(); };
-    const onPointer = e => { pointerX = e.clientX / innerWidth * 2 - 1; pointerY = e.clientY / innerHeight * 2 - 1; schedule(); };
-    const clampUnit = value => Math.max(-1, Math.min(1, value));
-    const onOrientation = e => {
-      if (e.beta === null || e.gamma === null) return;
-      if (baseBeta === null || baseGamma === null) { baseBeta = e.beta; baseGamma = e.gamma; return; }
-      pointerX = clampUnit((e.gamma - baseGamma) / 28);
-      pointerY = clampUnit((e.beta - baseBeta) / 28);
-      schedule();
-    };
-    const attachOrientation = () => {
-      if (!hasOrientation || orientationListening) return;
-      orientationListening = true;
-      window.addEventListener("deviceorientation", onOrientation, { passive: true });
-    };
-    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(measure, 200); };
+  const parent = world.parentElement, grade = parent.querySelector(".world-grade");
+  const sections = [...world.querySelectorAll(".world-section")];
+  const layers = [...world.querySelectorAll(".world-layer")].map(element => ({
+    element,
+    si: Number(element.dataset.section.slice(1)) - 1,
+    speed: Number(element.dataset.speed || 0),
+  }));
+  const geo = sections.map(() => ({ mid: 0, end: 0 }));
+  const grades = ["rgba(255,210,150,.12)", "rgba(10,5,0,.45)", "rgba(110,30,190,.3)", "rgba(0,0,0,0)"];
+  let current = scrollY, target = scrollY, viewportHeight = innerHeight, raf = 0, resizeTimer, mounted = true, gradeIdx = -1;
 
-    function draw() {
-      raf = 0;
-      if (!mounted) return;
-      // The world itself now scrolls natively with the page (no JS-driven transform), so it can never
-      // lag or leave a gap. Only the parallax offsets are eased here, which is what gives the
-      // smooth "liquid" depth feel.
-      const diff = target - current;
-      current = Math.abs(diff) < .2 ? target : current + diff * .16;
-      smoothX += (pointerX - smoothX) * .1;
-      smoothY += (pointerY - smoothY) * .1;
-      if (Math.abs(pointerX - smoothX) < .001) smoothX = pointerX;
-      if (Math.abs(pointerY - smoothY) < .001) smoothY = pointerY;
-      const half = viewportHeight / 2;
-      for (let i = 0; i < layers.length; i++) {
-        const l = layers[i], d = geo[l.si].mid - current - half;
-        const mouseX = -smoothX * l.depth * l.parallaxRate * 72 * motionScale;
-        const mouseY = -smoothY * l.depth * l.parallaxRate * 48 * motionScale;
-        l.element.style.transform = `translate3d(${mouseX}px,${d * l.speed * 1.35 + mouseY}px,0)`;
-      }
-      const mid = current + half, idx = mid < geo[0].end ? 0 : mid < geo[1].end ? 1 : mid < geo[2].end ? 2 : 3;
-      if (grade && idx !== gradeIdx) { gradeIdx = idx; grade.style.backgroundColor = grades[idx]; }
-      if (current !== target || smoothX !== pointerX || smoothY !== pointerY) schedule();
+  const schedule = () => { if (!raf && mounted) raf = requestAnimationFrame(draw); };
+  // Section geometry is measured ONCE (and on resize), never inside the frame loop.
+  const measure = () => {
+    viewportHeight = innerHeight;
+    const origin = parent.getBoundingClientRect().top + scrollY;
+    sections.forEach((s, i) => { geo[i] = { mid: origin + s.offsetTop + s.offsetHeight / 2, end: origin + s.offsetTop + s.offsetHeight }; });
+    schedule();
+  };
+  const onScroll = () => { target = scrollY; schedule(); };
+  const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(measure, 200); };
+
+  function draw() {
+    raf = 0;
+    if (!mounted) return;
+    // Only the scroll parallax is eased here, which gives the smooth "liquid" depth feel.
+    const diff = target - current;
+    current = Math.abs(diff) < .2 ? target : current + diff * .16;
+    const half = viewportHeight / 2;
+    for (let i = 0; i < layers.length; i++) {
+      const l = layers[i], d = geo[l.si].mid - current - half;
+      l.element.style.transform = `translate3d(0,${d * l.speed * 1.35}px,0)`;
     }
+    const mid = current + half, idx = mid < geo[0].end ? 0 : mid < geo[1].end ? 1 : mid < geo[2].end ? 2 : 3;
+    if (grade && idx !== gradeIdx) { gradeIdx = idx; grade.style.backgroundColor = grades[idx]; }
+    if (current !== target) schedule();
+  }
 
-    if (touch && hasOrientation && !requiresTiltPermission) attachOrientation();
-    measure(); window.addEventListener("scroll", onScroll, { passive: true }); if (canMouseParallax) window.addEventListener("pointermove", onPointer, { passive: true }); window.addEventListener("resize", onResize);
-    const observer = window.ResizeObserver ? new ResizeObserver(() => measure()) : null; observer?.observe(world);
-    // Do not decode every distant layer here: that would force lazy images to download on first load.
-    // World sections have fixed heights, so their parallax geometry is already accurate after measure().
-    return () => { root.style.overflowX = prevRootX; body.style.overflowX = prevBodyX; mounted = false; cancelAnimationFrame(raf); clearTimeout(resizeTimer); observer?.disconnect(); window.removeEventListener("scroll", onScroll); window.removeEventListener("pointermove", onPointer); window.removeEventListener("deviceorientation", onOrientation); window.removeEventListener("resize", onResize); };
-  }, []);
+  measure();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onResize);
+  const observer = window.ResizeObserver ? new ResizeObserver(() => measure()) : null; observer?.observe(world);
+
+  return () => {
+    root.style.overflowX = prevRootX; body.style.overflowX = prevBodyX;
+    mounted = false; cancelAnimationFrame(raf); clearTimeout(resizeTimer);
+    observer?.disconnect();
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onResize);
+  };
+}, []);
 
   const geodeHeight = "140vh";
   const height = `calc(112vh + 175vh + ${geodeHeight})`;
