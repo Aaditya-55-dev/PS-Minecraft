@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import "tailwindcss";
 
+<<<<<<< Updated upstream
 html.lenis,
 html.lenis body {
   height: auto;
@@ -25,43 +26,112 @@ html.lenis body {
 
 .faq-scrollbar::-webkit-scrollbar-track {
   background: #342116;
+=======
+@layer base {
+  html.lenis,
+  html.lenis body {
+    @apply h-auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    @apply overflow-hidden;
+  }
 }
 
-@keyframes cave-torch-flicker {
-  0%, 100% { opacity: .48; }
-  35% { opacity: .78; }
-  72% { opacity: .58; }
+@theme {
+  --animate-bee-orbit-left: bee-flight-left 26s ease-in-out infinite;
+  --animate-bee-orbit-right: bee-flight-right 31s ease-in-out infinite;
+  --animate-cave-torch-flicker: cave-torch-flicker 2.6s ease-in-out infinite alternate;
+  --animate-lantern-sway: lantern-sway 5.5s ease-in-out infinite alternate;
+  --animate-lantern-drop-in: lantern-drop-in 1s cubic-bezier(.18,.72,.24,1) both;
+  --animate-vines-drop-in: vines-drop-in 1.05s cubic-bezier(.18,.72,.24,1) both;
+  --animate-mcb-line-in: mcb-line-in 160ms ease-out forwards;
+  --animate-mcb-line-out: mcb-line-out 160ms ease-in forwards;
+
+  @keyframes vines-drop-in {
+    from {
+      translate: 0 -150px;
+      opacity: 0;
+    }
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes mcb-line-in {
+    from { opacity: 0; transform: translateY(0.16em); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes mcb-line-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-0.12em); }
+  }
+
+  @keyframes lantern-drop-in {
+    from { translate: 0 -220px; opacity: 0; }
+    to { translate: 0 0; opacity: 1; }
+  }
+
+  @keyframes lantern-sway {
+    from { rotate: -2deg; }
+    to { rotate: 2deg; }
+  }
+
+  @keyframes cave-torch-flicker {
+    0%, 100% { opacity: .48; }
+    35% { opacity: .78; }
+    72% { opacity: .58; }
+  }
+
+  @keyframes bee-flight-left {
+    0%, 100% { translate: 0 0; }
+    18% { translate: 3vw -4vh; }
+    42% { translate: 6vw 1vh; }
+    66% { translate: 5vw 3vh; }
+    84% { translate: 1vw 2vh; }
+  }
+
+  @keyframes bee-flight-right {
+    0%, 100% { translate: 0 0; }
+    18% { translate: -3vw 2vh; }
+    42% { translate: -6vw 3vh; }
+    66% { translate: -5vw 1vh; }
+    84% { translate: -1vw -4vh; }
+  }
 }
 
-@keyframes bee-flight-left {
-  0%, 100% { translate: 0 0; }
-  18% { translate: 3vw -4vh; }
-  42% { translate: 6vw 1vh; }
-  66% { translate: 5vw 3vh; }
-  84% { translate: 1vw 2vh; }
+@utility cave-torch-glow {
+  background:
+    radial-gradient(ellipse 17% 8% at 14% 12%, rgba(255, 174, 64, .7), rgba(255, 112, 24, .3) 38%, transparent 100%),
+    radial-gradient(ellipse 17% 8% at 86% 12%, rgba(255, 174, 64, .7), rgba(255, 112, 24, .3) 38%, transparent 100%),
+    radial-gradient(ellipse 17% 8% at 14% 44%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
+    radial-gradient(ellipse 17% 8% at 86% 44%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
+    radial-gradient(ellipse 17% 8% at 14% 74%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%),
+    radial-gradient(ellipse 17% 8% at 86% 74%, rgba(255, 174, 64, .62), rgba(255, 112, 24, .26) 38%, transparent 100%);
+>>>>>>> Stashed changes
 }
 
-@keyframes bee-flight-right {
-  0%, 100% { translate: 0 0; }
-  18% { translate: -3vw 2vh; }
-  42% { translate: -6vw 3vh; }
-  66% { translate: -5vw 1vh; }
-  84% { translate: -1vw -4vh; }
-}
-
-.bee-orbit-left {
+@utility bee-orbit-left {
   animation: bee-flight-left 26s ease-in-out infinite;
 }
 
-.bee-orbit-right {
+@utility bee-orbit-right {
   animation: bee-flight-right 31s ease-in-out infinite;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .bee-orbit-left,
   .bee-orbit-right {
     animation: none;
   }
 }
+<<<<<<< Updated upstream
 body.modal-open {
   overflow: hidden;
 }
@@ -1034,3 +1104,5 @@ body.modal-open {
   }
 }
 
+=======
+>>>>>>> Stashed changes
