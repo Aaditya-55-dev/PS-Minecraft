@@ -15,8 +15,8 @@ export default function Home() {
             </CherryBlossom>
             <Info />
             <BookSection />
-            <PrevWinners />
             <PrizePool/>
+            <PrevWinners />
             <Footer />
         </div>
     );
