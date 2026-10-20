@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import UnderwaterEffects from './components/UnderwaterEffects.jsx';
+import UnderwaterEffects from '../components/UnderwaterEffects.jsx';
 // import MinecraftAnimals3D from './components/MinecraftAnimals3D.jsx';
 import bgImage from '../assets/minecraft_coral_ocean.webp';
 import parchmentCardImg from '../assets/parchment_card.webp';
@@ -135,7 +135,7 @@ export default function PrizePool() {
 
             {/* Background — pinned to the viewport while this section is on screen.
           It scrolls away only when the section ends. h/-mb = one screen tall, content overlays it. */}
-            <div className="sticky top-0 h-[100dvh] -mb-[100dvh] -mx-2.5 sm:-mx-5 overflow-hidden pointer-events-none z-0">
+            <div className="top-0 h-[100dvh] -mb-[100dvh] -mx-2.5 sm:-mx-5 overflow-hidden pointer-events-none z-0">
                 <div
                     className="absolute inset-0"
                     style={{
@@ -154,7 +154,7 @@ export default function PrizePool() {
                     }}
                 />
                 {/* Effects live inside the pinned layer so they stay on screen too */}
-                {/* <UnderwaterEffects /> */}
+                <UnderwaterEffects />
                 {/* <MinecraftAnimals3D /> */}
             </div>
 

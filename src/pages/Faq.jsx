@@ -107,7 +107,7 @@ export default function Faq() {
       </picture>
       <div className="relative z-[1] mx-auto flex h-full w-full min-w-0 max-w-[1400px] flex-col py-[clamp(2rem,6vh,5rem)]">
         <p className="mb-2 text-[clamp(1rem,1.5vw,1.25rem)] font-bold tracking-[.2em] text-[#ffcb66] [text-shadow:2px_2px_#2b160c] max-[540px]:mb-1 max-[540px]:text-[.95rem] max-[540px]:tracking-[.14em]">HACKFUSION 3 · FIELD GUIDE</p>
-        <h2 id="faq-title" className="mb-[clamp(1rem,2.5vh,2rem)] text-[clamp(2.65rem,6.2vw,5.5rem)] font-black leading-[1.04] tracking-[-.035em] text-[#fff4dc] [text-shadow:4px_5px_0_#35190d,0_8px_22px_rgba(0,0,0,.45)] [-webkit-text-stroke:.5px_rgba(69,32,14,.7)] max-[540px]:mb-3 max-[540px]:max-w-[16ch] max-[540px]:text-[clamp(1.9rem,8.5vw,2.6rem)] max-[540px]:leading-[1.06]">Frequently Asked Questions</h2>
+        <h2 id="faq-title" className="faq-page-title mb-[clamp(1rem,2.5vh,2rem)] text-[clamp(2.65rem,6.2vw,5.5rem)] font-black leading-[1.04] tracking-[-.035em] text-[#fff4dc] [text-shadow:4px_5px_0_#35190d,0_8px_22px_rgba(0,0,0,.45)] [-webkit-text-stroke:.5px_rgba(69,32,14,.7)] max-[540px]:mb-3 max-[540px]:max-w-[16ch] max-[540px]:text-[clamp(1.9rem,8.5vw,2.6rem)] max-[540px]:leading-[1.06]">Frequently Asked Questions</h2>
         <div className="faq-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain pr-2" data-lenis-prevent>
           <div className="grid gap-[clamp(.75rem,1.2vw,1.1rem)] pb-2 max-[540px]:gap-2.5">
             {questions.map(({ question, answer }, index) => {
@@ -123,7 +123,7 @@ export default function Faq() {
                 >
                   <h3 className="m-0">
                     <button
-                      className="flex min-h-[clamp(80px,6.8vw,104px)] w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-[clamp(1.1rem,2.8vw,2.3rem)] py-[clamp(.9rem,1.6vw,1.3rem)] text-left text-[clamp(1.6rem,2.9vw,2.25rem)] font-extrabold leading-[1.15] text-[#fff3dc] [font-family:'Minecraft','VT323','Courier_New',monospace] [text-shadow:2px_3px_#30180d,0_2px_8px_rgba(0,0,0,.4)] hover:[&_.faq-toggle]:border-[#fff1c9] hover:[&_.faq-toggle]:bg-[rgba(91,54,21,.88)] hover:[&_.faq-toggle]:shadow-[0_0_12px_rgba(255,216,137,.28)] focus-visible:outline-[3px] focus-visible:outline-[#ffe48a] focus-visible:outline-offset-[-7px] motion-reduce:transition-none max-[540px]:min-h-[52px] max-[540px]:gap-3 max-[540px]:px-3 max-[540px]:py-2.5 max-[540px]:text-[clamp(1.05rem,4.6vw,1.3rem)]"
+                      className="faq-question-button flex min-h-[clamp(80px,6.8vw,104px)] w-full cursor-pointer items-center justify-between gap-4 border-0 bg-transparent px-[clamp(1.1rem,2.8vw,2.3rem)] py-[clamp(.9rem,1.6vw,1.3rem)] text-left text-[clamp(1.6rem,2.9vw,2.25rem)] font-extrabold leading-[1.15] text-[#fff3dc] [font-family:'Minecraft','VT323','Courier_New',monospace] [text-shadow:2px_3px_#30180d,0_2px_8px_rgba(0,0,0,.4)] hover:[&_.faq-toggle]:border-[#fff1c9] hover:[&_.faq-toggle]:bg-[rgba(91,54,21,.88)] hover:[&_.faq-toggle]:shadow-[0_0_12px_rgba(255,216,137,.28)] focus-visible:outline-[3px] focus-visible:outline-[#ffe48a] focus-visible:outline-offset-[-7px] motion-reduce:transition-none max-[540px]:min-h-[52px] max-[540px]:gap-3 max-[540px]:px-3 max-[540px]:py-2.5 max-[540px]:text-[clamp(1.05rem,4.6vw,1.3rem)]"
                       type="button"
                       aria-expanded={isOpen}
                       aria-controls={answerId}
@@ -144,7 +144,7 @@ export default function Faq() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: reduceMotion ? 0 : 0.28, ease: "easeOut" }}
                       >
-                        <p className="m-0 px-[clamp(1.25rem,3.5vw,3rem)] pb-[clamp(1.5rem,3vw,2.5rem)] text-[clamp(1.4rem,2.3vw,1.9rem)] font-semibold leading-[1.55] text-[#ffefcf] [font-family:'Minecraft','VT323','Courier_New',monospace] [text-shadow:1px_2px_#32190e,0_2px_7px_rgba(0,0,0,.7)] max-[540px]:px-3 max-[540px]:pb-4 max-[540px]:text-[1.15rem] max-[540px]:leading-[1.4]">{answer}</p>
+                        <p className="faq-answer-text m-0 px-[clamp(1.25rem,3.5vw,3rem)] pb-[clamp(1.5rem,3vw,2.5rem)] text-[clamp(1.4rem,2.3vw,1.9rem)] font-semibold leading-[1.55] text-[#ffefcf] [font-family:'Minecraft','VT323','Courier_New',monospace] [text-shadow:1px_2px_#32190e,0_2px_7px_rgba(0,0,0,.7)] max-[540px]:px-3 max-[540px]:pb-4 max-[540px]:text-[1.15rem] max-[540px]:leading-[1.4]">{answer}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
