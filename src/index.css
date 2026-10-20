@@ -27,35 +27,14 @@ html.lenis body {
   background: #342116;
 }
 
-@keyframes cave-torch-flicker {
-  0%, 100% { opacity: .48; }
-  35% { opacity: .78; }
-  72% { opacity: .58; }
-}
-
-@keyframes bee-flight-left {
-  0%, 100% { translate: 0 0; }
-  18% { translate: 3vw -4vh; }
-  42% { translate: 6vw 1vh; }
-  66% { translate: 5vw 3vh; }
-  84% { translate: 1vw 2vh; }
-}
-
-@keyframes bee-flight-right {
-  0%, 100% { translate: 0 0; }
-  18% { translate: -3vw 2vh; }
-  42% { translate: -6vw 3vh; }
-  66% { translate: -5vw 1vh; }
-  84% { translate: -1vw -4vh; }
-}
-
-.bee-orbit-left {
+@utility bee-orbit-left {
   animation: bee-flight-left 26s ease-in-out infinite;
 }
 
-.bee-orbit-right {
+@utility bee-orbit-right {
   animation: bee-flight-right 31s ease-in-out infinite;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .bee-orbit-left,
   .bee-orbit-right {
@@ -1034,6 +1013,7 @@ body.modal-open {
   }
 }
 
+=======
 
 @media (min-width: 769px) {
   .faq-page-title {
