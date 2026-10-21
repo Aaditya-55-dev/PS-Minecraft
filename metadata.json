@@ -1,0 +1,6 @@
+{
+  "name": "Hackfusion 4.0 - Problem Statements",
+  "description": "Interactive Minecraft-themed problem statements portal for Hackfusion 4.0 hosted by SWAG Google Developer Groups.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

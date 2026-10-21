@@ -1,3 +1,38 @@
+<<<<<<< HEAD
+@import "tailwindcss";
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .pixel-corners {
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0,
+      calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+  }
+  .pixel-corners-lg {
+    clip-path: polygon(
+      0 8px, 8px 8px, 8px 0,
+      calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+      100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+      8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+    );
+  }
+  .text-pixel-shadow {
+    text-shadow: 2px 2px 0px #181008, 0px 2px 0px #181008, 2px 0px 0px #181008;
+  }
+  .text-gold-shadow {
+    text-shadow: 2px 2px 0px #422d05, 0px 2px 0px #422d05;
+  }
+}
+=======
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 @import "tailwindcss";
 
@@ -1059,3 +1094,4 @@ body.modal-open {
     font: 600 clamp(1.45rem, 1.8vw, 1.75rem)/1.55 "VT323", monospace;
   }
 }
+>>>>>>> 1c741ef2ebab3823e16c790b93349e54d16ff237
