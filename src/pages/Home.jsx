@@ -17,8 +17,7 @@ export default function Home() {
             <Info />
             <BookSection />
             <PrizePool/>
-            <Schedule/>
-            
+            <Schedule/>           
             <PrevWinners />
             <Footer />
         </div>
