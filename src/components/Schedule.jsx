@@ -392,7 +392,7 @@ export default function Schedule() {
                     )}
                 </AnimatePresence>
 
-                <div className="flex items-center gap-3 border-2 border-[#5a3a1e] bg-[#e8d6a2] px-3 py-2 text-[#2a1a0a] shadow-[0_0_0_2px_#2a1a0a,4px_4px_0_#2a1a0a] sm:gap-4 sm:px-4">
+                {/* <div className="flex items-center gap-3 border-2 border-[#5a3a1e] bg-[#e8d6a2] px-3 py-2 text-[#2a1a0a] shadow-[0_0_0_2px_#2a1a0a,4px_4px_0_#2a1a0a] sm:gap-4 sm:px-4">
                     <span className="font-['Press_Start_2P'] text-[9px] sm:text-[10px]">
                         LVL {Math.max(1, reached)}
                     </span>
@@ -409,7 +409,7 @@ export default function Schedule() {
                     >
                         Back to base
                     </button>
-                </div>
+                </div> */}
             </div>
         </section>
     );
