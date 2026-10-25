@@ -7,6 +7,9 @@ const Faq = lazy(() => import("./pages/Faq"));
 const Sponsors = lazy(() => import("./pages/Sponsors"));
 import ProblemStatement from "./pages/ProblemStatement";
 import SplashGate from "./components/SplashGate";
+import Register from "./pages/Registration";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 // import Schedule from "./pages/Schedule";
 // import RegistrationForm from "./pages/RegistrationForm";
 // import { BackgroundGradientAnimation } from "./components/ui/background-gradient-animation";
@@ -37,9 +40,11 @@ function App() {
               <Route path="/faq" element={<Faq />} />
               <Route path="/sponsors" element={<Sponsors />} />
               <Route path="/problem-statement" element={<ProblemStatement />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard/>} />
               {/* <Route path="/registration" element={<RegistrationForm/>} />
               <Route path="/login" element={<Login/>} />
-              <Route path="/dashboard" element={<Dashboard/>} />
               <Route path="/register" element={<Register/>} />
               <Route path="/sponsors" element={<Sponsor/>} />
               <Route path="/schedule" element={<Schedule/>} />
